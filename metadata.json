@@ -1,0 +1,6 @@
+{
+  "name": "Milkimom Web App",
+  "description": "High-converting premium landing page for Milkimom motherhood healthcare supplement.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

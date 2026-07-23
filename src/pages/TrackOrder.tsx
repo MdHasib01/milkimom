@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { motion } from 'motion/react';
-import { CheckCircle2, Circle, XCircle, Loader2, Home as HomeIcon } from 'lucide-react';
+import { CheckCircle2, Circle, XCircle, Loader2, Home as HomeIcon, Printer } from 'lucide-react';
 import { getOrderById } from '../lib/api';
 import logoImg from '../assets/logo.png';
 
@@ -129,6 +129,13 @@ export default function TrackOrder() {
                   </div>
                 )}
               </div>
+
+              <Link
+                to={`/invoice/${order._id}`}
+                className="w-full bg-white text-gray-800 py-4 rounded-2xl font-bold hover:bg-gray-50 transition-colors duration-300 flex items-center justify-center gap-2 border border-gray-200 shadow-sm"
+              >
+                <Printer size={18} /> ইনভয়েস প্রিন্ট / PDF ডাউনলোড
+              </Link>
 
               <p className="text-sm text-gray-500 text-center leading-relaxed">
                 যেকোনো প্রয়োজনে —{' '}

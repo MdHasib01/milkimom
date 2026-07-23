@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { Loader2, RefreshCw, Search, ExternalLink } from 'lucide-react';
+import { Loader2, RefreshCw, Search, ExternalLink, Printer } from 'lucide-react';
 import { fetchOrders, changeOrderStatus } from '../../lib/adminApi';
 
 const STATUSES = ['Pending', 'Confirmed', 'Shipped', 'Delivered', 'Cancelled'] as const;
@@ -114,7 +114,7 @@ export default function AdminOrders() {
                 <th className="px-4 py-3">Payment</th>
                 <th className="px-4 py-3">Total</th>
                 <th className="px-4 py-3">Status</th>
-                <th className="px-4 py-3">Track</th>
+                <th className="px-4 py-3">Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -157,14 +157,24 @@ export default function AdminOrders() {
                     </div>
                   </td>
                   <td className="px-4 py-3">
-                    <a
-                      href={`/track/${order._id}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-brand-magenta hover:underline inline-flex items-center gap-1 text-xs font-semibold"
-                    >
-                      View <ExternalLink size={12} />
-                    </a>
+                    <div className="flex flex-col gap-1.5">
+                      <a
+                        href={`/track/${order._id}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-brand-magenta hover:underline inline-flex items-center gap-1 text-xs font-semibold"
+                      >
+                        Track <ExternalLink size={12} />
+                      </a>
+                      <a
+                        href={`/invoice/${order._id}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-gray-600 hover:text-gray-900 hover:underline inline-flex items-center gap-1 text-xs font-semibold"
+                      >
+                        Invoice <Printer size={12} />
+                      </a>
+                    </div>
                   </td>
                 </tr>
               ))}

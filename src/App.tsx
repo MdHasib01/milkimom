@@ -6,6 +6,7 @@ import Payment from './pages/Payment';
 import Success from './pages/Success';
 import OrderPlaced from './pages/OrderPlaced';
 import TrackOrder from './pages/TrackOrder';
+import Invoice from './pages/Invoice';
 import AdminLogin from './pages/admin/AdminLogin';
 import AdminLayout from './pages/admin/AdminLayout';
 import AdminOrders from './pages/admin/AdminOrders';
@@ -23,6 +24,7 @@ export default function App() {
         <Route path="/success" element={<Success />} />
         <Route path="/order-placed/:id" element={<OrderPlaced />} />
         <Route path="/track/:id" element={<TrackOrder />} />
+        <Route path="/invoice/:id" element={<Invoice />} />
 
         {/* Admin */}
         <Route path="/admin/login" element={<AdminLogin />} />

@@ -282,12 +282,16 @@ export default function OrderForm() {
     }, 1000);
   };
 
-  const sendCustomerConfirmation = async (orderDetails: any) => {
-    const customerSms = `🎉 অভিনন্দন Great মা!
+  const sendCustomerConfirmation = async (orderDetails: any, orderId?: string) => {
+    const trackingLine = orderId
+      ? `\n\nঅর্ডার ট্র্যাক করুন:\n${window.location.origin}/track/${orderId}`
+      : '';
+
+    const customerSms = `অভিনন্দন Great মা!
 
 আপনার Milkimom অর্ডারটি সফলভাবে গ্রহণ করা হয়েছে।
 
-ইনশাআল্লাহ ২–৩ কার্যদিবসের মধ্যে আপনার অর্ডারটি আপনার ঠিকানায় পৌঁছে যাবে।
+ইনশাআল্লাহ ২–৩ কার্যদিবসের মধ্যে আপনার অর্ডারটি আপনার ঠিকানায় পৌঁছে যাবে।${trackingLine}
 
 যেকোনো প্রয়োজনে যোগাযোগ করুন:
 
@@ -345,7 +349,7 @@ Make Mother Great Again.`;
 
     // Admin email + SMS are sent by the backend on order creation
     // (configurable via the admin dashboard settings).
-    await sendCustomerConfirmation(orderDetails);
+    await sendCustomerConfirmation(orderDetails, result.data?._id);
 
     return result;
   };

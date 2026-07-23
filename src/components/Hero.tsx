@@ -3,12 +3,15 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { CheckCircle2, Star, ShieldCheck, Heart, Truck, CheckCircle, ChevronLeft, ChevronRight } from 'lucide-react';
 import jarImage from '../assets/images/milkimom_jar_1782105456829.jpg';
+import carousel1 from '../assets/carousel1.png';
+import carousel2 from '../assets/carousel2.png';
+import carousel3 from '../assets/carousel3.png';
 import { useMotherCounter } from '../hooks/useMotherCounter';
 
 const productImages = [
-  jarImage, // Use the existing import for now to avoid broken image, user will replace it later
-  "PASTE_JAR_IMAGE_LINK_2_HERE",
-  "PASTE_JAR_IMAGE_LINK_3_HERE"
+  carousel1,
+  carousel2,
+  carousel3
 ];
 
 export default function Hero() {
@@ -168,7 +171,7 @@ export default function Hero() {
               
               <div className="absolute inset-0 bg-gradient-to-t from-brand-peach/5 to-transparent mix-blend-multiply"></div>
               
-              <div className="relative w-full h-full flex items-center justify-center px-4">
+              <div className="relative w-full h-full flex items-center justify-center">
                 <AnimatePresence mode="wait">
                   <motion.img
                     key={currentSlide}
@@ -185,7 +188,7 @@ export default function Hero() {
                       if (offset.x < -40) nextSlide();
                       else if (offset.x > 40) prevSlide();
                     }}
-                    className="absolute z-20 h-56 sm:h-64 object-contain filter drop-shadow-xl cursor-grab active:cursor-grabbing transition-transform duration-300 group-hover:scale-105"
+                    className="absolute inset-0 z-20 w-full h-full object-cover filter drop-shadow-xl cursor-grab active:cursor-grabbing transition-transform duration-300 group-hover:scale-105"
                   />
                 </AnimatePresence>
               </div>

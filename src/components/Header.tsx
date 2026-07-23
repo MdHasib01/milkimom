@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { Star } from 'lucide-react';
+import logoImg from '../assets/logo.png';
 
 export default function Header() {
   const navigate = useNavigate();
@@ -7,10 +7,9 @@ export default function Header() {
 
   return (
     <header className="flex justify-between items-center px-6 sm:px-12 py-6 bg-white/30 backdrop-blur-md border-b border-white/20 relative z-30">
-      <div className="flex items-center gap-2">
-        <div className="w-10 h-10 rounded-full bg-brand-peach flex items-center justify-center text-white font-bold text-xl shadow-inner">M</div>
-        <span className="text-2xl font-bold tracking-tighter text-brand-magenta">Milki<span className="text-brand-gold">mom</span></span>
-      </div>
+      <a href="#" className="flex items-center gap-2 group">
+        <img src={logoImg} alt="Milkimom Logo" className="h-10 sm:h-12 w-auto object-contain transition-transform duration-300 group-hover:scale-105" />
+      </a>
       
       <nav className="hidden md:flex gap-8 text-sm font-semibold text-gray-700 uppercase tracking-wide">
         <a href="#hero" className="hover:text-brand-magenta transition-colors duration-300 ">হোম</a>

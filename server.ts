@@ -3,6 +3,7 @@ import path from 'path';
 import { createServer as createViteServer } from 'vite';
 import { createClient } from '@supabase/supabase-js';
 import dotenv from 'dotenv';
+import http from 'http';
 
 dotenv.config();
 
@@ -170,7 +171,7 @@ async function sendBdBulkSms(to: string, message: string, purpose: string = 'unk
 
 async function startServer() {
   const app = express();
-  const PORT = 3000;
+  const PORT = process.env.PORT || 3000;
 
   app.use(express.json());
 
@@ -236,10 +237,17 @@ async function startServer() {
     }
   });
 
+  const server = http.createServer(app);
+
   // Vite middleware for development
   if (process.env.NODE_ENV !== 'production') {
     const vite = await createViteServer({
-      server: { middlewareMode: true },
+      server: { 
+        middlewareMode: true,
+        hmr: {
+          server: server,
+        },
+      },
       appType: 'spa',
     });
     app.use(vite.middlewares);
@@ -251,7 +259,7 @@ async function startServer() {
     });
   }
 
-  app.listen(PORT, '0.0.0.0', () => {
+  server.listen(Number(PORT), '0.0.0.0', () => {
     console.log(`Server running on http://localhost:${PORT}`);
   });
 }

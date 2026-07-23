@@ -2,6 +2,7 @@ import React, { useLayoutEffect } from 'react';
 import { ShieldCheck, Truck, CreditCard, Users } from 'lucide-react';
 import OrderForm from '../components/OrderForm';
 import { useMotherCounter } from '../hooks/useMotherCounter';
+import logoImg from '../assets/logo.png';
 
 export default function Checkout() {
   const { total: masterMotherCount } = useMotherCounter();
@@ -38,10 +39,9 @@ export default function Checkout() {
       <header className="bg-white border-b border-gray-100 sticky top-0 z-50">
         <div className="max-w-5xl mx-auto px-4 py-4">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div className="flex items-center justify-center gap-2">
-              <div className="w-8 h-8 rounded-full bg-brand-peach flex items-center justify-center text-white font-bold shadow-inner">M</div>
-              <span className="text-xl font-bold tracking-tighter text-brand-magenta">Milki<span className="text-brand-gold">mom</span></span>
-            </div>
+            <a href="/" className="flex items-center justify-center gap-2">
+              <img src={logoImg} alt="Milkimom Logo" className="h-9 sm:h-11 w-auto object-contain" />
+            </a>
             
             <div className="flex flex-wrap justify-center sm:justify-end gap-3 sm:gap-6 text-[11px] sm:text-xs font-bold text-gray-600">
               <div className="flex items-center gap-1.5"><ShieldCheck size={14} className="text-brand-magenta" /> Secure Checkout</div>
@@ -57,8 +57,8 @@ export default function Checkout() {
         {/* 2. Selected Product */}
         <div className="bg-white rounded-2xl p-4 sm:p-6 shadow-sm border border-brand-peach/20 mb-8 flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <div className="w-16 h-16 bg-brand-lightpink rounded-xl flex items-center justify-center border border-brand-peach/10">
-              <div className="w-10 h-10 bg-brand-peach rounded-full flex items-center justify-center text-white font-bold text-xl">M</div>
+            <div className="w-16 h-16 bg-brand-lightpink rounded-xl flex items-center justify-center border border-brand-peach/10 p-2">
+              <img src={logoImg} alt="Milkimom" className="w-full h-full object-contain" />
             </div>
             <div>
               <h2 className="font-bold text-lg sm:text-xl text-gray-900">Milkimom Complete Dose</h2>

@@ -1,4 +1,5 @@
 import { Facebook, Phone, MapPin } from 'lucide-react';
+import logoImg from '../assets/logo.png';
 
 export default function Footer() {
   return (
@@ -14,8 +15,7 @@ export default function Footer() {
           
           <div className="lg:col-span-2">
             <div className="flex items-center gap-2 mb-6">
-              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-brand-peach to-brand-magenta flex items-center justify-center text-white font-bold text-xl shadow-inner">M</div>
-              <span className="text-3xl font-bold tracking-tighter text-white">Milki<span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-peach to-brand-gold">mom</span></span>
+              <img src={logoImg} alt="Milkimom Logo" className="h-12 sm:h-14 w-auto object-contain bg-white/95 px-3 py-1.5 rounded-xl shadow-md" />
             </div>
             <p className="text-gray-400 max-w-sm mb-8 pb-8 border-b border-white/10 leading-relaxed font-medium">
               ১ ডোজেই পার্মানেন্টলি বুকের দুধ বাড়ায়। মা ও শিশুর সম্পূর্ণ পুষ্টি নিশ্চিত করার বিশ্বস্ত সঙ্গী।

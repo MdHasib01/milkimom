@@ -7,6 +7,7 @@ import SearchableSelect from './SearchableSelect';
 import { bdLocations } from '../data/bdLocations';
 import { saveOrder, sendSms } from '../lib/api';
 import { useJourneyProgress } from '../hooks/useJourneyProgress';
+import bkashImg from '../assets/bkash.png';
 
 const ChocolateIcon = () => (
   <svg viewBox="0 0 100 100" className="w-7 h-7 sm:w-9 sm:h-9 drop-shadow-sm">
@@ -153,6 +154,7 @@ export default function OrderForm() {
     phone?: string;
     address?: string;
     location?: string;
+    trxId?: string;
   }>({});
 
   // Delivery Timer Logic (5-minute free delivery countdown)
@@ -257,6 +259,9 @@ export default function OrderForm() {
     if (!district || !thana) {
       newErrors.location = "ম্যাম, জেলা ও থানা নির্বাচন করুন।";
     }
+    if (paymentMethod === 'prepaid' && !trxId.trim()) {
+      newErrors.trxId = "ম্যাম, বিকাশ ট্রানজেকশন আইডি (TrxID) প্রদান করুন।";
+    }
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -275,61 +280,6 @@ export default function OrderForm() {
       setCheckoutStep('otp');
       setShowCheckoutPopup(true);
     }, 1000);
-  };
-
-  const sendAdminOrderNotification = async (orderDetails: any) => {
-    // Admin SMS
-    const paymentText = orderDetails.transactionId ? 'bKash' : 'Cash on Delivery';
-    
-    let adminSms = `নতুন Milkimom অর্ডার
-
-নাম: ${orderDetails.customerName}
-
-ফোন: ${orderDetails.phone}
-
-জেলা: ${orderDetails.district}
-
-থানা: ${orderDetails.thana}
-
-ফ্লেভার: ${orderDetails.flavour}
-
-পেমেন্ট: ${paymentText}
-`;
-    
-    if (orderDetails.transactionId) {
-      adminSms += `
-Trx ID:
-${orderDetails.transactionId}
-`;
-    }
-    
-    adminSms += `
-মোট: ৳${orderDetails.price}`;
-    
-    const adminSmsResult = await sendSms('01975917919', adminSms.trim(), 'admin_notification');
-    if (!adminSmsResult.success) {
-      console.error('Error sending Admin SMS:', adminSmsResult.error);
-    }
-
-    // Admin Email
-    const adminEmail = `
-New Milkimom Order
-Product: ${orderDetails.product}
-Flavour: ${orderDetails.flavour}
-Payment: ${orderDetails.paymentMethod}
-Total: ৳${orderDetails.price}
-Customer: ${orderDetails.customerName}
-Phone: ${orderDetails.phone}
-Alternative Phone: ${orderDetails.alternativePhone || 'N/A'}
-District: ${orderDetails.district}
-Thana: ${orderDetails.thana}
-Address: ${orderDetails.address}
-Transaction ID: ${orderDetails.transactionId || 'N/A'}
-Screenshot: ${orderDetails.screenshotUploaded ? 'Yes' : 'No'}
-Order Time: ${orderDetails.orderTime}
-`.trim();
-
-    console.log("Mock API Call: Sending Email to milkimominfo@gmail.com:\n", adminEmail);
   };
 
   const sendCustomerConfirmation = async (orderDetails: any) => {
@@ -393,7 +343,8 @@ Make Mother Great Again.`;
       alert(`Order Error: ${typeof result.error === 'string' ? result.error : JSON.stringify(result.error)}`);
     }
 
-    await sendAdminOrderNotification(orderDetails);
+    // Admin email + SMS are sent by the backend on order creation
+    // (configurable via the admin dashboard settings).
     await sendCustomerConfirmation(orderDetails);
 
     return result;
@@ -409,28 +360,23 @@ Make Mother Great Again.`;
       return;
     }
     
-    if (paymentMethod === 'prepaid') {
-      if (!trxId) {
-        alert('Transaction ID দিন');
-        return;
-      }
-      setCheckoutStep('preparing');
-      const result = await triggerBackendNotifications(true, trxId);
-      if (result.success) {
-        setCheckoutStep('success');
+    if (paymentMethod === 'prepaid' && !trxId) {
+      alert('Transaction ID দিন');
+      return;
+    }
+
+    setCheckoutStep('preparing');
+    const result = await triggerBackendNotifications(paymentMethod === 'prepaid', trxId);
+    if (result.success) {
+      const orderId = result.data?._id;
+      if (orderId) {
+        navigate(`/order-placed/${orderId}`);
       } else {
-        alert('Order could not be saved. Please try again.');
-        setCheckoutStep('payment');
+        setCheckoutStep('success');
       }
     } else {
-      setCheckoutStep('preparing');
-      const result = await triggerBackendNotifications(false);
-      if (result.success) {
-        setCheckoutStep('success');
-      } else {
-        alert('Order could not be saved. Please try again.');
-        setCheckoutStep('payment');
-      }
+      alert('Order could not be saved. Please try again.');
+      setCheckoutStep('payment');
     }
   };
 
@@ -440,13 +386,18 @@ Make Mother Great Again.`;
       alert('Transaction ID দিন');
       return;
     }
+    setCheckoutStep('preparing');
     const result = await triggerBackendNotifications(true, trxId);
     if (result.success) {
-      await triggerCustomerConfirmation(true);
-      setCheckoutStep('preparing');
-      setTimeout(() => {
+      const orderId = result.data?._id;
+      if (orderId) {
+        navigate(`/order-placed/${orderId}`);
+      } else {
         setCheckoutStep('success');
-      }, 1000);
+      }
+    } else {
+      alert('Order could not be saved. Please try again.');
+      setCheckoutStep('payment');
     }
   };
 
@@ -763,8 +714,69 @@ Make Mother Great Again.`;
                            </div>
                            <span className="text-xs text-gray-500">অনলাইনে পেমেন্ট করে <span className="bengali-num">১০০</span> টাকা ক্যাশব্যাক নিন</span>
                          </div>
-                       </label>
-                     </div>
+                        </label>
+
+                        {/* bKash Details & Trx ID field when Pay Now (bKash) is selected */}
+                        {paymentMethod === 'prepaid' && (
+                          <motion.div 
+                            initial={{ opacity: 0, height: 0 }}
+                            animate={{ opacity: 1, height: 'auto' }}
+                            exit={{ opacity: 0, height: 0 }}
+                            className="p-4 sm:p-5 bg-gradient-to-br from-pink-50/80 to-white rounded-2xl border border-brand-peach/40 space-y-4 shadow-sm mt-3"
+                          >
+                            {/* Large Cover bKash Image Header */}
+                            <div className="w-full rounded-2xl overflow-hidden border-2 border-brand-peach/30 shadow-md bg-white p-2">
+                              <img 
+                                src={bkashImg} 
+                                alt="bKash Payment" 
+                                className="w-full h-auto max-h-64 sm:max-h-72 object-contain object-center rounded-xl"
+                              />
+                            </div>
+                            <div className="bg-white p-3.5 rounded-xl border border-pink-100 shadow-sm text-center">
+                              <span className="text-xs text-gray-500 block font-medium">বিকাশ পার্সোনাল নম্বর (Send Money)</span>
+                              <span className="text-xl font-mono font-bold text-brand-magenta tracking-wider select-all">01926-344244</span>
+                            </div>
+
+                            {/* Bangla Instructions */}
+                            <div className="bg-amber-50/70 p-4 rounded-xl border border-amber-200/60 text-xs sm:text-sm text-gray-800 space-y-2">
+                              <p className="font-bold text-amber-900 flex items-center gap-1.5 text-sm">
+                                <span>📌</span> বিকাশ পেমেন্ট করার নির্দেশাবলী:
+                              </p>
+                              <ol className="list-decimal list-inside space-y-1.5 text-gray-700 leading-relaxed font-medium pl-1">
+                                <li>আপনার বিকাশ মোবাইল অ্যাপ অথবা <span className="font-mono font-bold">*247#</span> ডায়াল করুন।</li>
+                                <li><strong className="text-gray-900">Send Money</strong> অপশনটি সিলেক্ট করুন।</li>
+                                <li>প্রাপক নম্বর লিখুন: <strong className="font-mono text-brand-magenta text-sm">01926-344244</strong></li>
+                                <li>মোট পরিমাণ: <strong className="bengali-num text-brand-magenta font-bold">৳{toBengaliNum(totalPrice)}</strong> টাকা দিয়ে পিন দিন।</li>
+                                <li>সেন্ড মানি সফল হওয়ার পর প্রাপ্ত <strong className="text-gray-900">Transaction ID (TrxID)</strong> নিচের ইনপুট বক্সে লিখুন।</li>
+                              </ol>
+                            </div>
+
+                            {/* TrxID Input Field */}
+                            <div>
+                              <label className="block mb-1.5 text-sm font-bold text-gray-900 flex items-center justify-between">
+                                <span>বিকাশ ট্রানজেকশন আইডি (TrxID) <span className="text-red-500">*</span></span>
+                                <span className="text-[11px] font-normal text-gray-500">উদাহরণ: 9AB12CD34E</span>
+                              </label>
+                              <input 
+                                type="text"
+                                value={trxId}
+                                onChange={(e) => {
+                                  setTrxId(e.target.value);
+                                  if (errors.trxId) setErrors(prev => ({ ...prev, trxId: undefined }));
+                                }}
+                                placeholder="bKash TrxID এখানে লিখুন (যেমন: 9AB12CD34E)"
+                                className={`w-full px-4 py-3 rounded-xl border font-mono uppercase text-sm ${errors.trxId ? 'border-red-300 focus:ring-4 focus:ring-red-200 bg-red-50/10' : 'border-gray-200 focus:border-brand-magenta focus:ring-4 focus:ring-brand-peach/20 bg-white'} outline-none transition-all duration-300`}
+                              />
+                              {errors.trxId && (
+                                <div className="flex items-center gap-1.5 text-red-500 text-xs font-semibold mt-1.5">
+                                  <AlertCircle size={14} className="shrink-0" />
+                                  <span>{errors.trxId}</span>
+                                </div>
+                              )}
+                            </div>
+                          </motion.div>
+                        )}
+                      </div>
                    </div>
                  </div>
                </div>
@@ -1006,37 +1018,56 @@ Make Mother Great Again.`;
                 <>
                   <div className="p-5 sm:p-6 overflow-y-auto">
                     {paymentMethod === 'prepaid' ? (
-                      <div className="space-y-6">
+                      <div className="space-y-5">
                         <div className="text-center">
-                          <h4 className="text-lg font-bold text-gray-900 mb-2">bKash Payment</h4>
-                          <p className="text-gray-600 text-sm leading-relaxed">নিচের bKash নাম্বারে <strong>Send Money</strong> করুন।</p>
+                          <div className="w-full rounded-2xl overflow-hidden border-2 border-brand-peach/30 shadow-md bg-white p-2 mb-3">
+                            <img 
+                              src={bkashImg} 
+                              alt="bKash Payment" 
+                              className="w-full h-auto max-h-56 sm:max-h-64 object-contain object-center rounded-xl"
+                            />
+                          </div>
+                          <h4 className="text-lg font-bold text-gray-900 mb-1">bKash Payment (বিকাশ পেমেন্ট)</h4>
+                          <p className="text-gray-600 text-xs sm:text-sm leading-relaxed">নিচের bKash নাম্বারে <strong>Send Money</strong> করে TrxID দিন।</p>
                         </div>
                         
-                        <div className="bg-gray-50 p-6 rounded-2xl border border-gray-100 text-center">
-                          <p className="text-sm text-gray-500 mb-1 leading-relaxed">বিকাশ পার্সোনাল নাম্বার</p>
-                          <p className="text-2xl font-mono font-bold text-brand-magenta tracking-wider leading-relaxed">01926-344244</p>
+                        <div className="bg-gradient-to-r from-pink-50 to-rose-50 p-4 sm:p-5 rounded-2xl border border-pink-100 text-center shadow-sm">
+                          <p className="text-xs text-gray-500 mb-1 font-medium">বিকাশ পার্সোনাল নাম্বার (Send Money)</p>
+                          <p className="text-2xl sm:text-3xl font-mono font-bold text-brand-magenta tracking-wider select-all">01926-344244</p>
+                        </div>
+
+                        {/* Bangla Instructions */}
+                        <div className="bg-amber-50/70 p-3.5 rounded-xl border border-amber-200/60 text-xs text-gray-800 space-y-1.5">
+                          <p className="font-bold text-amber-900 flex items-center gap-1">
+                            <span>📌</span> পেমেন্ট করার নির্দেশাবলী:
+                          </p>
+                          <ol className="list-decimal list-inside space-y-1 text-gray-700 leading-relaxed font-medium">
+                            <li>bKash অ্যাপ বা <span className="font-mono font-bold">*247#</span> ডায়াল করে <strong>Send Money</strong> সিলেক্ট করুন।</li>
+                            <li>নম্বর: <strong className="font-mono text-brand-magenta">01926-344244</strong> | পরিমাণ: <strong className="bengali-num text-brand-magenta">৳{toBengaliNum(totalPrice)}</strong></li>
+                            <li>পেমেন্ট সম্পূর্ণ হলে প্রাপ্ত <strong>Transaction ID (TrxID)</strong> নিচে বসান।</li>
+                          </ol>
                         </div>
                         
                         <div className="space-y-4">
                           <div>
-                            <label className="block mb-2 text-base font-semibold text-gray-900">Transaction ID (TrxID) <span className="text-red-500">*</span></label>
+                            <label className="block mb-1.5 text-sm font-semibold text-gray-900">Transaction ID (TrxID) <span className="text-red-500">*</span></label>
                             <input 
                               type="text"
                               value={trxId}
                               onChange={(e) => setTrxId(e.target.value)}
                               placeholder="যেমন: 9AB12CD34E"
-                              className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-brand-magenta focus:ring-1 focus:ring-brand-magenta outline-none font-mono uppercase"
+                              className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-brand-magenta focus:ring-4 focus:ring-brand-peach/20 outline-none font-mono uppercase text-sm"
                             />
                           </div>
                           <div>
-                            <label className="block mb-2 text-base font-semibold text-gray-900">Screenshot Upload <span className="text-gray-500 font-normal text-sm">(Optional)</span></label>
+                            <label className="block mb-1.5 text-sm font-semibold text-gray-900">Screenshot Upload <span className="text-gray-500 font-normal text-xs">(Optional)</span></label>
                             <input 
                               type="file"
                               accept=".jpg,.jpeg,.png,.webp,.pdf"
                               onChange={(e) => setScreenshotUploaded(e.target.files && e.target.files.length > 0)}
-                              className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-brand-magenta focus:ring-1 focus:ring-brand-magenta outline-none text-sm text-gray-600 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-brand-lightpink file:text-brand-magenta hover:file:bg-brand-peach/20"
+                              className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-brand-magenta focus:ring-4 focus:ring-brand-peach/20 outline-none text-xs text-gray-600 file:mr-4 file:py-1.5 file:px-3 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-brand-lightpink file:text-brand-magenta hover:file:bg-brand-peach/20"
                             />
-                            <p className="text-xs text-gray-500 mt-2">Accepted: jpg, jpeg, png, webp, pdf</p>
+                            <p className="text-[11px] text-gray-400 mt-1">Accepted: jpg, jpeg, png, webp, pdf</p>
                           </div>
                         </div>
                       </div>

@@ -11,4 +11,9 @@ export const API_ENDPOINTS = {
   orderById: (id: string) => `${API_BASE_URL}/api/orders/${id}`,
   orderStatus: (id: string) => `${API_BASE_URL}/api/orders/${id}/status`,
   sendSms: `${API_BASE_URL}/api/sms/send`,
+  login: `${API_BASE_URL}/api/auth/login`,
+  me: `${API_BASE_URL}/api/auth/me`,
+  settings: `${API_BASE_URL}/api/settings`,
+  adminUsers: `${API_BASE_URL}/api/admin-users`,
+  adminUserById: (id: string) => `${API_BASE_URL}/api/admin-users/${id}`,
 } as const;

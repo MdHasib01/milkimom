@@ -1,7 +1,7 @@
 import { motion } from 'motion/react';
 import { Check, X, ArrowRight } from 'lucide-react';
 import formulaMountainImg from '../assets/images/formula_mountain_1782105493500.jpg';
-import jarImage from '../assets/images/milkimom_jar_1782105456829.jpg';
+import carousel2 from '../assets/carousel2.png';
 
 const TABLE_DATA = [
   { m: 'পার্মানেন্ট সলিউশন', o: 'সাময়িক সমাধান' },
@@ -58,15 +58,14 @@ export default function Comparison() {
               initial={{ opacity: 0, x: 30 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
-              className="relative rounded-2xl shadow-[0_20px_50px_-20px_rgba(189,0,82,0.1)] aspect-[16/9] bg-gradient-to-br from-brand-cream via-white to-brand-peach/10 border border-white flex flex-col items-center justify-center overflow-hidden"
+              className="relative rounded-2xl overflow-hidden shadow-[0_20px_50px_-20px_rgba(189,0,82,0.15)] aspect-[16/9] border border-white group"
             >
-              <div className="absolute inset-0 bg-brand-peach/5 backdrop-blur-[2px]"></div>
-              <img src={jarImage} alt="Milkimom Supplement Jar" className="h-[75%] object-contain relative z-10 filter drop-shadow-2xl transition-transform duration-300 group-hover:scale-105 transition-opacity duration-300 opacity-0" onLoad={(e) => e.currentTarget.classList.remove('opacity-0')} />
-              <div className="absolute bottom-4 w-full px-6 z-10 flex flex-col items-center">
-                 <div className="inline-flex items-center gap-2 mb-2 bg-white/80 backdrop-blur-md text-green-700 px-4 py-2 rounded-full border border-green-200/50 shadow-sm">
-                   <Check size={18} className="text-green-600" /> <span className="font-bold text-sm tracking-wide">একবারের ইনভেস্টমেন্ট</span>
+              <img src={carousel2} alt="Milkimom Supplement Jar" className="absolute inset-0 w-full h-full object-cover transition-transform duration-300 group-hover:scale-105 transition-opacity duration-300 opacity-0" onLoad={(e) => e.currentTarget.classList.remove('opacity-0')} />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex flex-col justify-end p-4 z-10">
+                 <div className="inline-flex items-center gap-2 mb-2 bg-green-500/20 backdrop-blur-md text-green-50 px-4 py-2 rounded-full w-fit border border-green-500/30">
+                   <Check size={18} className="text-green-400" /> <span className="font-bold text-sm tracking-wide">একবারের ইনভেস্টমেন্ট</span>
                  </div>
-                 <h3 className="text-gray-900 text-2xl font-bold">মিল্কিমম ১ ডোজ</h3>
+                 <h3 className="text-white text-2xl font-bold drop-shadow-md">মিল্কিমম ১ ডোজ</h3>
               </div>
             </motion.div>
           </div>

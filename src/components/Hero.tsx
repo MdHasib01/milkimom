@@ -57,14 +57,14 @@ export default function Hero() {
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 relative z-10">
-        <div className="grid lg:grid-cols-2 gap-12 items-center">
+        <div className="flex flex-col lg:grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
           
-          {/* Left Text Content */}
+          {/* 1. Top Left Text Content (Title, Subtext, Counter, Badges) */}
           <motion.div 
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3 }}
-            className="text-center lg:text-left space-y-10"
+            className="order-1 lg:order-1 lg:col-start-1 lg:row-start-1 text-center lg:text-left space-y-8 w-full"
           >
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-lightpink text-xs font-bold text-brand-peach uppercase tracking-tighter">
               <Star size={14} fill="currentColor" />
@@ -105,60 +105,14 @@ export default function Hero() {
                 <span className="text-sm font-bold text-gray-700">ডক্টর সাজেস্টেড</span>
               </div>
             </div>
-
-            <div className="pt-6 max-w-lg mx-auto lg:mx-0">
-              <div className="text-left mb-4">
-                <h3 className="text-[17px] sm:text-lg font-bold text-gray-900 mb-3 drop-shadow-sm">আপনার বর্তমান পরিস্থিতি কোনটি?</h3>
-                <div className="flex flex-col gap-2.5">
-                  {["বুকের দুধ কম", "ফর্মুলা দিতে হচ্ছে", "বাবু পেট ভরে খেতে পারে না"].map(problem => (
-                    <div 
-                      key={problem}
-                      onClick={() => setSelectedProblem(problem)}
-                      className={`flex items-center gap-3 p-3.5 sm:p-4 rounded-xl border-2 cursor-pointer transition-all duration-300 ${selectedProblem === problem ? 'border-brand-magenta bg-brand-lightpink/30' : 'border-white/60 bg-white/40 hover:border-brand-peach/50'}`}
-                    >
-                      <div className={`w-5 h-5 flex-shrink-0 rounded-full border-2 flex items-center justify-center transition-colors ${selectedProblem === problem ? 'border-brand-magenta' : 'border-gray-300'}`}>
-                        {selectedProblem === problem && <div className="w-2.5 h-2.5 bg-brand-magenta rounded-full"></div>}
-                      </div>
-                      <span className="font-bold text-gray-800 text-[15px] sm:text-[16px]">{problem}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-              
-              <AnimatePresence>
-                {selectedProblem && (
-                  <motion.div
-                    key="eligibility-cta"
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -10 }}
-                    className="flex flex-col items-center lg:items-start mt-4"
-                  >
-                    <p className="text-brand-magenta font-bold flex items-center gap-2 mb-4 text-[15px] sm:text-[16px]">
-                      ❤️ হাজারো মা ঠিক এই পরিস্থিতি থেকেই শুরু করেছিলেন।
-                    </p>
-                    <button 
-                      onClick={() => {
-                        const evt = new CustomEvent('eligibilityOpenedWithHeroProblem', { detail: selectedProblem });
-                        window.dispatchEvent(evt);
-                        document.getElementById('eligibility-trigger')?.click();
-                      }}
-                      className="bg-gradient-to-r from-brand-magenta to-brand-peach text-white px-2 sm:px-8 py-4 rounded-2xl shadow-[0_20px_40px_-10px_rgba(189,0,82,0.4)] gap-3 transform hover:-translate-y-1 hover:shadow-lg active:scale-95 transition-all duration-300 w-full hover:shadow-[0_25px_50px_-12px_rgba(189,0,82,0.5)] text-[11px] min-[375px]:text-[13px] sm:text-base md:text-lg font-bold whitespace-nowrap text-center flex items-center justify-center"
-                    >
-                      <span>10 সেকেন্ডে দেখে নিন মিল্কিমম আপনার জন্য উপযুক্ত কিনা</span>
-                    </button>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
           </motion.div>
 
-          {/* Right Image/Jar Content */}
+          {/* 2. Carousel (Shows prominent product images right after title/badges on mobile, right column on desktop) */}
           <motion.div 
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.3, delay: 0.2 }}
-            className="relative w-full aspect-square max-w-md mx-auto flex items-center justify-center"
+            className="order-2 lg:order-2 lg:col-start-2 lg:row-start-1 lg:row-span-3 relative w-full aspect-square max-w-md mx-auto flex items-center justify-center my-4 lg:my-0"
           >
             {/* Outline rings */}
             <div className="absolute w-[400px] h-[400px] border-2 border-brand-gold/30 rounded-full flex items-center justify-center animate-[spin_20s_linear_infinite]">
@@ -219,8 +173,57 @@ export default function Hero() {
                 <ChevronRight size={24} className="ml-0.5" />
               </button>
             </div>
-
           </motion.div>
+
+          {/* 3. Situation Selection ("আপনার বর্তমান পরিস্থিতি কোনটি?") */}
+          <div className="order-3 lg:order-3 lg:col-start-1 lg:row-start-2 w-full max-w-lg mx-auto lg:mx-0">
+            <div className="text-left mb-4">
+              <h3 className="text-[17px] sm:text-lg font-bold text-gray-900 mb-3 drop-shadow-sm">আপনার বর্তমান পরিস্থিতি কোনটি?</h3>
+              <div className="flex flex-col gap-2.5">
+                {["বুকের দুধ কম", "ফর্মুলা দিতে হচ্ছে", "বাবু পেট ভরে খেতে পারে না"].map(problem => (
+                  <div 
+                    key={problem}
+                    onClick={() => setSelectedProblem(problem)}
+                    className={`flex items-center gap-3 p-3.5 sm:p-4 rounded-xl border-2 cursor-pointer transition-all duration-300 ${selectedProblem === problem ? 'border-brand-magenta bg-brand-lightpink/30' : 'border-white/60 bg-white/40 hover:border-brand-peach/50'}`}
+                  >
+                    <div className={`w-5 h-5 flex-shrink-0 rounded-full border-2 flex items-center justify-center transition-colors ${selectedProblem === problem ? 'border-brand-magenta' : 'border-gray-300'}`}>
+                      {selectedProblem === problem && <div className="w-2.5 h-2.5 bg-brand-magenta rounded-full"></div>}
+                    </div>
+                    <span className="font-bold text-gray-800 text-[15px] sm:text-[16px]">{problem}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* 4. Eligibility CTA Button */}
+          <div className="order-4 lg:order-4 lg:col-start-1 lg:row-start-3 w-full max-w-lg mx-auto lg:mx-0">
+            <AnimatePresence>
+              {selectedProblem && (
+                <motion.div
+                  key="eligibility-cta"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  className="flex flex-col items-center lg:items-start"
+                >
+                  <p className="text-brand-magenta font-bold flex items-center gap-2 mb-4 text-[15px] sm:text-[16px]">
+                    ❤️ হাজারো মা ঠিক এই পরিস্থিতি থেকেই শুরু করেছিলেন।
+                  </p>
+                  <button 
+                    onClick={() => {
+                      const evt = new CustomEvent('eligibilityOpenedWithHeroProblem', { detail: selectedProblem });
+                      window.dispatchEvent(evt);
+                      document.getElementById('eligibility-trigger')?.click();
+                    }}
+                    className="bg-gradient-to-r from-brand-magenta to-brand-peach text-white px-2 sm:px-8 py-4 rounded-2xl shadow-[0_20px_40px_-10px_rgba(189,0,82,0.4)] gap-3 transform hover:-translate-y-1 hover:shadow-lg active:scale-95 transition-all duration-300 w-full hover:shadow-[0_25px_50px_-12px_rgba(189,0,82,0.5)] text-[11px] min-[375px]:text-[13px] sm:text-base md:text-lg font-bold whitespace-nowrap text-center flex items-center justify-center"
+                  >
+                    <span>10 সেকেন্ডে দেখে নিন মিল্কিমম আপনার জন্য উপযুক্ত কিনা</span>
+                  </button>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
 
         </div>
       </div>

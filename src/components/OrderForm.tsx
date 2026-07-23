@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { useMotherCounter } from '../hooks/useMotherCounter';
 import SearchableSelect from './SearchableSelect';
 import { bdLocations } from '../data/bdLocations';
-import { saveOrderToSupabase } from '../lib/supabase';
+import { saveOrder, sendSms } from '../lib/api';
 import { useJourneyProgress } from '../hooks/useJourneyProgress';
 
 const ChocolateIcon = () => (
@@ -209,27 +209,11 @@ export default function OrderForm() {
       const otp = Math.floor(100000 + Math.random() * 900000).toString();
       setGeneratedOtp(otp);
       
-      try {
-        const response = await fetch('/api/send-sms', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            to: phone,
-            message: `আপনার Milkimom ভেরিফিকেশন কোড: ${otp}`,
-            purpose: 'otp'
-          })
-        });
-        
-        const data = await response.json();
-        if (!data.success) {
-          console.error('Failed to send OTP SMS:', data.error);
-        } else {
-          console.log('OTP SMS sent successfully');
-        }
-      } catch (err) {
-        console.error('Error calling SMS API:', err);
+      const data = await sendSms(phone, `আপনার Milkimom ভেরিফিকেশন কোড: ${otp}`, 'otp');
+      if (!data.success) {
+        console.error('Failed to send OTP SMS:', data.error);
+      } else {
+        console.log('OTP SMS sent successfully');
       }
       
       setShowOtp(true);
@@ -322,18 +306,9 @@ ${orderDetails.transactionId}
     adminSms += `
 মোট: ৳${orderDetails.price}`;
     
-    try {
-      await fetch('/api/send-sms', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
-          to: '01975917919', 
-          message: adminSms.trim(),
-          purpose: 'admin_notification'
-        })
-      });
-    } catch (err) {
-      console.error('Error sending Admin SMS:', err);
+    const adminSmsResult = await sendSms('01975917919', adminSms.trim(), 'admin_notification');
+    if (!adminSmsResult.success) {
+      console.error('Error sending Admin SMS:', adminSmsResult.error);
     }
 
     // Admin Email
@@ -372,18 +347,9 @@ WhatsApp:
 Milkimom
 Make Mother Great Again.`;
 
-    try {
-      await fetch('/api/send-sms', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
-          to: orderDetails.phone, 
-          message: customerSms,
-          purpose: 'customer_confirmation'
-        })
-      });
-    } catch (err) {
-      console.error('Error sending Customer SMS:', err);
+    const customerSmsResult = await sendSms(orderDetails.phone, customerSms, 'customer_confirmation');
+    if (!customerSmsResult.success) {
+      console.error('Error sending Customer SMS:', customerSmsResult.error);
     }
   };
 
@@ -421,10 +387,10 @@ Make Mother Great Again.`;
       ...(isPrepaid && { transactionId: currentTrxId, screenshotUploaded })
     };
 
-    // Save to Supabase
-    const result = await saveOrderToSupabase(orderDetails);
-    if (!result.success && !result.mock) {
-      alert(`Supabase Error: ${result.error?.message || JSON.stringify(result.error)}`);
+    // Save to backend (MongoDB)
+    const result = await saveOrder(orderDetails);
+    if (!result.success) {
+      alert(`Order Error: ${typeof result.error === 'string' ? result.error : JSON.stringify(result.error)}`);
     }
 
     await sendAdminOrderNotification(orderDetails);

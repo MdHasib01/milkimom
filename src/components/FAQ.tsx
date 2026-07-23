@@ -41,7 +41,7 @@ export default function FAQ() {
   const scrollToForm = () => { navigate("/checkout"); };
 
   return (
-    <section className="py-12 lg:py-16 bg-[#fdfbfb] relative">
+    <section className="py-12 lg:py-16 bg-[#fdfbfb] relative overflow-hidden">
       {/* Background blobs */}
       <div className="absolute top-1/4 left-0 w-72 h-72 bg-brand-peach/10 rounded-full blur-[80px] -translate-x-1/2"></div>
       <div className="absolute bottom-1/4 right-0 w-96 h-96 bg-brand-lightpink/15 rounded-full blur-[100px] translate-x-1/3"></div>

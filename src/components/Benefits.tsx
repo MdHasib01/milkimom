@@ -15,7 +15,7 @@ export default function Benefits() {
   const scrollToForm = () => { navigate("/checkout"); };
 
   return (
-    <section className="py-12 lg:py-16 bg-[#fdfbfb] relative">
+    <section className="py-12 lg:py-16 bg-[#fdfbfb] relative overflow-hidden">
       <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-brand-peach/5 rounded-full blur-[80px] pointer-events-none"></div>
       <div className="max-w-4xl mx-auto px-4 sm:px-6 relative z-10">
         <div className="text-center mb-8">

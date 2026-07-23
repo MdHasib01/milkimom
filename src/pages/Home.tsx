@@ -21,7 +21,7 @@ import FloatingActions from '../components/FloatingActions';
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-brand-cream selection:bg-brand-magenta selection:text-white pt-[42px] sm:pt-[46px]">
+    <div className="min-h-screen bg-brand-cream selection:bg-brand-magenta selection:text-white pt-[42px] sm:pt-[46px] overflow-x-hidden w-full max-w-[100vw]">
       <CountdownBar />
       <Header />
       <Hero />

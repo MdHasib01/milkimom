@@ -32,12 +32,13 @@ export default function FloatingActions() {
       {/* Floating WhatsApp */}
       <button 
         onClick={openWhatsApp}
-        className="fixed bottom-24 right-4 sm:bottom-24 sm:right-6 z-50 bg-[#25D366] text-white p-4 rounded-full shadow-lg hover:scale-110 transition-transform duration-300 group flex items-center justify-center border-4 border-white"
+        aria-label="WhatsApp Order"
+        className={`fixed ${showSticky ? 'bottom-20 sm:bottom-24' : 'bottom-5 sm:bottom-6'} right-4 sm:right-6 z-50 bg-[#25D366] text-white p-3.5 sm:p-4 rounded-full shadow-xl hover:scale-110 active:scale-95 transition-all duration-300 group flex items-center justify-center border-4 border-white`}
       >
-        <span className="absolute right-full mr-4 bg-white text-gray-900 text-sm font-bold px-3 py-1.5 rounded-lg shadow-md whitespace-nowrap opacity-0 group-hover:opacity-100 transition-all duration-300 -opacity pointer-events-none border border-gray-100">
+        <span className="hidden sm:block absolute right-full mr-3 bg-white text-gray-900 text-xs sm:text-sm font-bold px-3 py-1.5 rounded-lg shadow-md whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none border border-gray-100">
           WhatsApp এ অর্ডার করুন
         </span>
-        <MessageCircle size={28} />
+        <MessageCircle className="w-6 h-6 sm:w-7 sm:h-7" />
       </button>
 
       {/* Sticky Mobile CTA adapted from provided HTML theme */}
@@ -47,7 +48,7 @@ export default function FloatingActions() {
             initial={{ y: 100 }}
             animate={{ y: 0 }}
             exit={{ y: 100 }}
-            className="fixed bottom-0 left-0 w-full h-[72px] sm:h-[80px] bg-[#e87b6b] flex items-center px-4 sm:px-12 justify-between z-40 shadow-[0_-4px_15px_rgba(0,0,0,0.1)] rounded-t-xl"
+            className="fixed bottom-0 left-0 right-0 w-full max-w-full h-[68px] sm:h-[80px] bg-[#e87b6b] flex items-center px-2.5 sm:px-12 justify-between z-40 shadow-[0_-4px_15px_rgba(0,0,0,0.1)] rounded-t-xl overflow-hidden"
           >
             <div className="hidden lg:flex items-center gap-8 opacity-80">
               <span className="text-[10px] font-black tracking-widest text-white">HALAL CERTIFIED</span>
@@ -55,18 +56,18 @@ export default function FloatingActions() {
               <span className="text-[10px] font-black tracking-widest text-white">BSTI REGISTERED</span>
             </div>
             
-            <div className="flex items-center justify-between w-full lg:w-auto gap-3 sm:gap-6">
+            <div className="flex items-center justify-between w-full lg:w-auto gap-2 sm:gap-6">
               {/* PRICE */}
               <div className="text-left sm:text-right shrink-0">
                 <p className="text-[10px] sm:text-[11px] font-bold text-white/80 line-through leading-none bengali-num">৳৮৯৯০</p>
-                <p className="text-lg sm:text-xl font-black text-white bengali-num leading-relaxed">৳৪৯৯০</p>
+                <p className="text-base sm:text-xl font-black text-white bengali-num leading-tight">৳৪৯৯০</p>
               </div>
 
               {/* TIMER */}
               {timeLeft && (
-                <div className="flex flex-col items-center shrink-0">
+                <div className="flex flex-col items-center shrink-0 hidden min-[350px]:flex">
                   <span className="text-[9px] sm:text-[10px] font-bold text-white/90 mb-0.5">শেষ হতে:</span>
-                  <div className="flex items-center font-mono text-[12px] sm:text-[14px] font-bold text-brand-peach bg-white px-1.5 sm:px-2 py-0.5 rounded shadow-sm" dir="ltr">
+                  <div className="flex items-center font-mono text-[11px] sm:text-[14px] font-bold text-brand-peach bg-white px-1.5 sm:px-2 py-0.5 rounded shadow-sm" dir="ltr">
                     <span>{timeLeft.h.toString().padStart(2, '0')}</span>
                     <span className="text-brand-peach mx-0.5 font-bold animate-pulse">:</span>
                     <span>{timeLeft.m.toString().padStart(2, '0')}</span>
@@ -77,7 +78,7 @@ export default function FloatingActions() {
               )}
 
               {/* CTA BUTTON */}
-              <button onClick={scrollToFlavour} className="bg-white text-[#e87b6b] text-sm sm:text-base px-4 sm:px-8 py-3 rounded-lg min-h-[48px] flex items-center justify-center font-bold shadow transition-transform duration-300 group-hover:scale-105 whitespace-nowrap shrink-0">
+              <button onClick={scrollToFlavour} className="bg-white text-[#e87b6b] text-xs sm:text-base px-3.5 sm:px-8 py-2.5 sm:py-3 min-h-[44px] sm:min-h-[48px] flex items-center justify-center font-bold shadow transition-transform duration-300 hover:scale-105 active:scale-95 whitespace-nowrap shrink-0">
                 এখনই অর্ডার করুন
               </button>
             </div>

@@ -112,16 +112,16 @@ export default function Hero() {
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.3, delay: 0.2 }}
-            className="order-2 lg:order-2 lg:col-start-2 lg:row-start-1 lg:row-span-3 relative w-full aspect-square max-w-md mx-auto flex items-center justify-center my-4 lg:my-0"
+            className="order-2 lg:order-2 lg:col-start-2 lg:row-start-1 lg:row-span-3 relative w-full aspect-square max-w-md mx-auto flex items-center justify-center my-4 lg:my-0 overflow-hidden"
           >
             {/* Outline rings */}
-            <div className="absolute w-[400px] h-[400px] border-2 border-brand-gold/30 rounded-full flex items-center justify-center animate-[spin_20s_linear_infinite]">
+            <div className="absolute w-[280px] h-[280px] min-[380px]:w-[340px] min-[380px]:h-[340px] sm:w-[400px] sm:h-[400px] border-2 border-brand-gold/30 rounded-full flex items-center justify-center animate-[spin_20s_linear_infinite]">
                <div className="absolute top-0 w-4 h-4 bg-brand-gold rounded-full blur-[2px]"></div>
                <div className="absolute bottom-10 right-10 w-3 h-3 bg-white rounded-full shadow-sm"></div>
             </div>
 
             {/* Jar card background style */}
-            <div className="relative w-[320px] h-[400px] sm:w-[340px] sm:h-[420px] bg-gradient-to-b from-[#fdfbfb] to-[#ebedee] rounded-2xl shadow-[0_50px_100px_-20px_rgba(189,0,82,0.2)] border-4 border-white flex flex-col items-center justify-center overflow-hidden z-10 group touch-pan-y">
+            <div className="relative w-full max-w-[300px] min-[380px]:max-w-[340px] h-[380px] sm:h-[420px] bg-gradient-to-b from-[#fdfbfb] to-[#ebedee] rounded-2xl shadow-[0_50px_100px_-20px_rgba(189,0,82,0.2)] border-4 border-white flex flex-col items-center justify-center overflow-hidden z-10 group touch-pan-y">
               
               <div className="absolute inset-0 bg-gradient-to-t from-brand-peach/5 to-transparent mix-blend-multiply"></div>
               

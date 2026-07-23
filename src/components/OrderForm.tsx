@@ -467,7 +467,7 @@ Make Mother Great Again.`;
   };
 
   return (
-    <section id="order-form" className="relative">
+    <section id="order-form" className="relative overflow-hidden">
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
         
         <div className="text-center mb-8" id="flavour-selection">

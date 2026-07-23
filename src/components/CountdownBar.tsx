@@ -137,17 +137,17 @@ export default function CountdownBar() {
   return (
     <>
       <div className="bg-gradient-to-r from-[#ffe3df] to-[#f6f0ec] border-b-2 border-[#e6a832] text-black h-[42px] sm:h-[46px] w-full fixed top-0 left-0 right-0 z-[9999] shadow-md flex items-center shadow-[#e6a832]/20">
-        <div className="max-w-7xl mx-auto w-full px-2 sm:px-4 flex items-center justify-between xl:justify-center gap-2 sm:gap-6">
+        <div className="max-w-7xl mx-auto w-full px-2.5 sm:px-4 flex items-center justify-between xl:justify-center gap-1.5 sm:gap-6">
           
           <div className="flex flex-1 xl:flex-none items-center justify-center gap-1 sm:gap-2">
-            <Clock size={16} className="text-[#e6a832] shrink-0" />
-            <span className="text-[12px] sm:text-[14px] font-bold tracking-tight truncate flex items-center text-black">
+            <Clock size={15} className="text-[#e6a832] shrink-0" />
+            <span className="text-[11px] sm:text-[14px] font-bold tracking-tight whitespace-nowrap flex items-center text-black">
               <span className="hidden sm:inline">অফারটি শেষ হতে আর বাকি মাত্র</span>
               <span className="sm:hidden">অফার শেষ হতে:</span>
             </span>
             
             {timeLeft && (
-              <div className="flex items-center font-mono text-[14px] sm:text-[16px] font-bold text-[#ff1c36] bg-white/60 px-1.5 sm:px-2 py-0.5 rounded shadow-inner ml-0.5 sm:ml-1" dir="ltr">
+              <div className="flex items-center font-mono text-[13px] sm:text-[16px] font-bold text-[#ff1c36] bg-white/70 px-1.5 sm:px-2 py-0.5 rounded shadow-inner ml-0.5 sm:ml-1 shrink-0" dir="ltr">
                 <span>{format(timeLeft.h)}</span>
                 <span className="opacity-80 animate-pulse mx-0.5">:</span>
                 <span>{format(timeLeft.m)}</span>
@@ -162,19 +162,19 @@ export default function CountdownBar() {
             )}
           </div>
 
-          <div className="flex items-center gap-1.5 sm:gap-2">
+          <div className="flex items-center gap-1 sm:gap-2 shrink-0">
             <button 
               onClick={handleScrollToForm}
-              className="bg-[#e87b6b] text-white text-[11px] sm:text-[13px] px-3 sm:px-5 py-1 sm:py-1.5 rounded-full font-bold shadow-md hover:bg-[#d86a5b] transition-colors duration-300 whitespace-nowrap border border-[#e87b6b]/50"
+              className="hidden sm:inline-flex bg-[#e87b6b] text-white text-[11px] sm:text-[13px] px-3 sm:px-5 py-1 sm:py-1.5 rounded-full font-bold shadow-md hover:bg-[#d86a5b] transition-colors duration-300 whitespace-nowrap border border-[#e87b6b]/50"
             >
               অর্ডার করুন
             </button>
             <button 
               onClick={handleSoundToggle}
-              className="p-1 sm:p-3 rounded-full hover:bg-black/5 transition-colors duration-300 "
+              className="p-1 sm:p-2 rounded-full hover:bg-black/5 transition-colors duration-300 shrink-0"
               aria-label={soundEnabled ? "Mute timer ticking" : "Enable timer ticking"}
             >
-              {soundEnabled ? <Volume2 size={14} className="sm:w-4 sm:h-4 text-black/70" /> : <VolumeX size={14} className="sm:w-4 sm:h-4 text-black/40" />}
+              {soundEnabled ? <Volume2 size={15} className="sm:w-4 sm:h-4 text-black/70" /> : <VolumeX size={15} className="sm:w-4 sm:h-4 text-black/40" />}
             </button>
           </div>
         </div>

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Shield, FlaskConical, Award, Leaf, Stethoscope, Droplet, Microscope, X, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Shield, FlaskConical, Award, Leaf, Droplet, X, ChevronLeft, ChevronRight } from 'lucide-react';
 
 import bcsirImg from '../assets/certificates/BCSIR.png';
 import bstiImg from '../assets/certificates/BSTI.png';
@@ -24,9 +24,6 @@ const BADGES: Badge[] = [
   { icon: Shield, image: haccpImg, label: 'H.A.C.C.P' },
   { icon: Droplet, image: halalImg, label: 'Halal' },
   { icon: Leaf, image: veganImg, label: 'Vegan' },
-  { icon: Stethoscope, label: 'Doctor Suggested' },
-  { icon: Microscope, label: 'Clinical Research' },
-  { icon: Leaf, label: 'Imported Ingredients' },
 ];
 
 export default function TrustBadges() {

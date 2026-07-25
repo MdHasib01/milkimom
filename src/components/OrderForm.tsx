@@ -113,12 +113,61 @@ const FLAVOURS_DATA = [
   },
 ];
 
+// --- Live "purchasing now" counter (fake social proof) ---
+// A random number between 50-100 is stored in sessionStorage with a 30 min TTL.
+// It survives page reloads within the window, and regenerates once expired.
+const LIVE_ORDER_STORAGE_KEY = 'milkimom_live_order_count';
+const LIVE_ORDER_TTL_MS = 30 * 60 * 1000; // 30 minutes
+
+const getLiveOrderCount = (): number => {
+  const generate = () => Math.floor(Math.random() * (100 - 50 + 1)) + 50; // 50-100 inclusive
+  try {
+    const raw = sessionStorage.getItem(LIVE_ORDER_STORAGE_KEY);
+    if (raw) {
+      const parsed = JSON.parse(raw) as { value: number; expiresAt: number };
+      // Always check the 30 min expiration before trusting the stored value.
+      if (parsed && typeof parsed.value === 'number' && Date.now() < parsed.expiresAt) {
+        return parsed.value;
+      }
+    }
+  } catch (e) {
+    // Ignore malformed/blocked storage and fall through to regenerate.
+  }
+  const value = generate();
+  try {
+    sessionStorage.setItem(
+      LIVE_ORDER_STORAGE_KEY,
+      JSON.stringify({ value, expiresAt: Date.now() + LIVE_ORDER_TTL_MS })
+    );
+  } catch (e) {
+    // Ignore storage errors (e.g. private mode) — value is still shown for this render.
+  }
+  return value;
+};
+
 export default function OrderForm() {
   const navigate = useNavigate();
   const counts = useMotherCounter();
   const { step, updateStep } = useJourneyProgress();
   const [selectedFlavour, setSelectedFlavour] = useState('dark-chocolate');
   const [paymentMethod, setPaymentMethod] = useState<'cod' | 'prepaid'>('cod');
+
+  // Live "purchasing now" count — seeded from sessionStorage (30 min TTL).
+  const [liveOrderCount, setLiveOrderCount] = useState<number>(() => getLiveOrderCount());
+
+  // Keep checking the 30 min expiration so a stale number refreshes even without a reload.
+  useEffect(() => {
+    const refresh = () => setLiveOrderCount(getLiveOrderCount());
+    const interval = setInterval(refresh, 60 * 1000); // re-check every minute
+    const onVisible = () => {
+      if (document.visibilityState === 'visible') refresh();
+    };
+    document.addEventListener('visibilitychange', onVisible);
+    return () => {
+      clearInterval(interval);
+      document.removeEventListener('visibilitychange', onVisible);
+    };
+  }, []);
 
   const [name, setName] = useState('');
   const [altPhone, setAltPhone] = useState('');
@@ -425,6 +474,19 @@ Make Mother Great Again.`;
     <section id="order-form" className="relative overflow-hidden">
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
         
+        {/* Live purchasing social proof */}
+        <div className="flex justify-center mb-8 sm:mb-10 px-2" id="live-purchasing">
+          <div className="inline-flex items-center gap-3 sm:gap-4 rounded-2xl sm:rounded-full bg-brand-magenta/10 border border-brand-magenta/20 px-5 py-4 sm:px-10 sm:py-5 shadow-sm max-w-full">
+            <span className="relative flex h-4 w-4 sm:h-5 sm:w-5 shrink-0">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-magenta opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-4 w-4 sm:h-5 sm:w-5 bg-brand-magenta"></span>
+            </span>
+            <p className="text-lg sm:text-2xl font-bold text-brand-magenta text-balance leading-snug">
+              আপনি এবং <span className="bengali-num">{toBengaliNum(liveOrderCount)}</span> জন এই মুহূর্তে অর্ডার প্লেস করছেন
+            </p>
+          </div>
+        </div>
+
         <div className="text-center mb-8" id="flavour-selection">
           <h2 className="text-balance text-3xl sm:text-4xl font-bold text-gray-900 mb-4 leading-tight">আপনার পছন্দের ফ্লেভারটি সিলেক্ট করুন</h2>
         </div>

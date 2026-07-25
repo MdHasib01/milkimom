@@ -118,9 +118,28 @@ const FLAVOURS_DATA = [
 // It survives page reloads within the window, and regenerates once expired.
 const LIVE_ORDER_STORAGE_KEY = 'milkimom_live_order_count';
 const LIVE_ORDER_TTL_MS = 30 * 60 * 1000; // 30 minutes
+const LIVE_ORDER_MIN = 50;
+const LIVE_ORDER_MAX = 100;
+
+const randomLiveOrderValue = () =>
+  Math.floor(Math.random() * (LIVE_ORDER_MAX - LIVE_ORDER_MIN + 1)) + LIVE_ORDER_MIN; // 50-100 inclusive
+
+// Persist a value to sessionStorage, preserving the existing 30 min expiry window.
+const persistLiveOrderCount = (value: number) => {
+  try {
+    let expiresAt = Date.now() + LIVE_ORDER_TTL_MS;
+    const raw = sessionStorage.getItem(LIVE_ORDER_STORAGE_KEY);
+    if (raw) {
+      const parsed = JSON.parse(raw) as { expiresAt?: number };
+      if (parsed && typeof parsed.expiresAt === 'number') expiresAt = parsed.expiresAt;
+    }
+    sessionStorage.setItem(LIVE_ORDER_STORAGE_KEY, JSON.stringify({ value, expiresAt }));
+  } catch (e) {
+    // Ignore storage errors (e.g. private mode).
+  }
+};
 
 const getLiveOrderCount = (): number => {
-  const generate = () => Math.floor(Math.random() * (100 - 50 + 1)) + 50; // 50-100 inclusive
   try {
     const raw = sessionStorage.getItem(LIVE_ORDER_STORAGE_KEY);
     if (raw) {
@@ -133,7 +152,7 @@ const getLiveOrderCount = (): number => {
   } catch (e) {
     // Ignore malformed/blocked storage and fall through to regenerate.
   }
-  const value = generate();
+  const value = randomLiveOrderValue();
   try {
     sessionStorage.setItem(
       LIVE_ORDER_STORAGE_KEY,
@@ -167,6 +186,25 @@ export default function OrderForm() {
       clearInterval(interval);
       document.removeEventListener('visibilitychange', onVisible);
     };
+  }, []);
+
+  // Randomly tick the count down by 1 every 10-20 seconds, persisting to sessionStorage.
+  useEffect(() => {
+    let timeout: ReturnType<typeof setTimeout>;
+    const schedule = () => {
+      const delayMs = (Math.floor(Math.random() * 11) + 10) * 1000; // 10-20s
+      timeout = setTimeout(() => {
+        setLiveOrderCount((prev) => {
+          // Regenerate a fresh higher number once we hit the floor, keeps it lively.
+          const next = prev > LIVE_ORDER_MIN ? prev - 1 : randomLiveOrderValue();
+          persistLiveOrderCount(next);
+          return next;
+        });
+        schedule();
+      }, delayMs);
+    };
+    schedule();
+    return () => clearTimeout(timeout);
   }, []);
 
   const [name, setName] = useState('');

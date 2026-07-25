@@ -110,8 +110,8 @@ export default function CountdownBar() {
       osc.frequency.setValueAtTime(600, audioContextRef.current.currentTime);
       osc.frequency.exponentialRampToValueAtTime(10, audioContextRef.current.currentTime + 0.05);
       
-      gain.gain.setValueAtTime(0.015, audioContextRef.current.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.001, audioContextRef.current.currentTime + 0.05);
+      gain.gain.setValueAtTime(0.15, audioContextRef.current.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.005, audioContextRef.current.currentTime + 0.05);
       
       osc.connect(gain);
       gain.connect(audioContextRef.current.destination);

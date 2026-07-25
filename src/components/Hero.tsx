@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { CheckCircle2, Star, ShieldCheck, Heart, Truck, CheckCircle, ChevronLeft, ChevronRight } from 'lucide-react';
 import jarImage from '../assets/images/milkimom_jar_1782105456829.jpg';
 import carousel1 from '../assets/carousel1.png';
-import carousel2 from '../assets/carousel2.png';
+import carousel2 from '../assets/carousel2.jpg';
 import carousel3 from '../assets/carousel3.png';
 import { useMotherCounter } from '../hooks/useMotherCounter';
 

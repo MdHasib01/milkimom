@@ -1,7 +1,7 @@
 import { motion } from 'motion/react';
 import { Check, X, ArrowRight } from 'lucide-react';
 import formulaMountainImg from '../assets/images/formula_mountain_1782105493500.jpg';
-import carousel2 from '../assets/carousel2.png';
+import carousel2 from '../assets/carousel2.jpg';
 
 const TABLE_DATA = [
   { m: 'পার্মানেন্ট সলিউশন', o: 'সাময়িক সমাধান' },

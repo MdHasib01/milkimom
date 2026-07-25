@@ -10,30 +10,31 @@ import girl4Img from '../assets/reviewer/girl4.jpeg';
 function parseYouTubeUrl(urlStr: string) {
   if (!urlStr || urlStr.startsWith('PASTE')) return null;
 
-  let videoId = '';
-  let isShort = false;
-
   try {
     const cleanUrl = urlStr.trim();
-    if (cleanUrl.includes('youtube.com/shorts/')) {
-      isShort = true;
-      const parts = cleanUrl.split('youtube.com/shorts/');
-      videoId = parts[1]?.split('?')[0]?.split('/')[0] || '';
-    } else if (cleanUrl.includes('youtu.be/')) {
-      const parts = cleanUrl.split('youtu.be/');
-      videoId = parts[1]?.split('?')[0]?.split('/')[0] || '';
-    } else if (cleanUrl.includes('v=')) {
-      const parts = cleanUrl.split('v=');
-      videoId = parts[1]?.split('&')[0]?.split('?')[0] || '';
-    } else if (/^[a-zA-Z0-9_-]{11}$/.test(cleanUrl)) {
-      videoId = cleanUrl;
+    const shortsMatch = cleanUrl.match(/(?:youtube\.com\/shorts\/|youtu\.be\/shorts\/)([a-zA-Z0-9_-]{11})/i);
+    if (shortsMatch) {
+      return { videoId: shortsMatch[1], isShort: true };
+    }
+
+    const youtuBeMatch = cleanUrl.match(/youtu\.be\/([a-zA-Z0-9_-]{11})/i);
+    if (youtuBeMatch) {
+      return { videoId: youtuBeMatch[1], isShort: false };
+    }
+
+    const vMatch = cleanUrl.match(/[?&]v=([a-zA-Z0-9_-]{11})/i);
+    if (vMatch) {
+      return { videoId: vMatch[1], isShort: false };
+    }
+
+    if (/^[a-zA-Z0-9_-]{11}$/.test(cleanUrl)) {
+      return { videoId: cleanUrl, isShort: cleanUrl.includes('shorts') };
     }
   } catch (e) {
     console.error("Error parsing YouTube URL:", e);
   }
 
-  if (!videoId) return null;
-  return { videoId, isShort };
+  return null;
 }
 
 const videoItems = [
@@ -41,21 +42,21 @@ const videoItems = [
     id: 1,
     title: "ডাক্তারের পরামর্শ",
     subtitle: "ডাক্তারদের বিশেষ দিকনির্দেশনা",
-    videoUrl: "https://youtube.com/shorts/5BnrYdhXP04?feature=share",
+    videoUrl: "https://youtube.com/shorts/D1H5Cxu-FgI?feature=share",
     thumbnail: ""
   },
   {
     id: 2,
     title: "মায়ের অভিজ্ঞতা",
     subtitle: "বাস্তব অভিজ্ঞতা ও সতস্ফূর্ত রিভিউ",
-    videoUrl: "https://youtu.be/ZuWM1WvFov4",
+    videoUrl: "https://youtu.be/1VJhx2sn47s",
     thumbnail: ""
   },
   {
     id: 3,
     title: "মিল্কিমম সম্পর্কে জানুন",
     subtitle: "উপাদান, গুণাগুণ ও সঠিক সেবনবিধি",
-    videoUrl: "https://youtube.com/shorts/W9azkDTN4vs?feature=share",
+    videoUrl: "https://youtube.com/shorts/Yt5QEyfy7rQ",
     thumbnail: ""
   }
 ];
@@ -219,8 +220,20 @@ export default function SocialProof() {
             {videoItems.map((video, idx) => {
               const ytInfo = parseYouTubeUrl(video.videoUrl);
               const hasCustomThumb = video.thumbnail && !video.thumbnail.startsWith('PASTE');
-              const ytThumb = ytInfo?.videoId ? `https://img.youtube.com/vi/${ytInfo.videoId}/hqdefault.jpg` : null;
-              const thumbUrl = hasCustomThumb ? video.thumbnail : ytThumb;
+              
+              // High quality YouTube CDN thumbnail URLs
+              // For Shorts, oar2.jpg or maxresdefault.jpg provides portrait/HD crop
+              const primaryYtThumb = ytInfo?.videoId 
+                ? (ytInfo.isShort 
+                    ? `https://i.ytimg.com/vi/${ytInfo.videoId}/oar2.jpg` 
+                    : `https://i.ytimg.com/vi/${ytInfo.videoId}/maxresdefault.jpg`)
+                : null;
+              
+              const fallbackYtThumb = ytInfo?.videoId 
+                ? `https://i.ytimg.com/vi/${ytInfo.videoId}/hqdefault.jpg` 
+                : null;
+
+              const thumbUrl = hasCustomThumb ? video.thumbnail : primaryYtThumb;
 
               return (
                 <motion.div
@@ -237,6 +250,11 @@ export default function SocialProof() {
                         alt={video.title}
                         loading="lazy"
                         className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                        onError={(e) => {
+                          if (fallbackYtThumb && e.currentTarget.src !== fallbackYtThumb) {
+                            e.currentTarget.src = fallbackYtThumb;
+                          }
+                        }}
                       />
                     ) : (
                       <div className="w-full h-full bg-gradient-to-br from-brand-magenta/80 via-brand-magenta/50 to-brand-peach flex flex-col items-center justify-center p-6 text-white text-center">

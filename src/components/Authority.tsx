@@ -1,9 +1,9 @@
 import { Stethoscope, Building2, CheckCircle2 } from 'lucide-react';
 import { motion } from 'motion/react';
-import saddamImg from '../assets/doctors/saddam.png';
-import nazmulImg from '../assets/doctors/nazmul.png';
-import hadisImg from '../assets/doctors/hadis.png';
-import wahidImg from '../assets/doctors/wahid.png';
+import saddamImg from '../assets/doctors/saddam.jpg';
+import nazmulImg from '../assets/doctors/nazmul.jpg';
+import hadisImg from '../assets/doctors/hadis.jpg';
+import wahidImg from '../assets/doctors/wahid.jpg';
 
 const DOCTORS = [
   { name: 'Dr. Md Saddam', desig: 'Doctor', img: saddamImg },

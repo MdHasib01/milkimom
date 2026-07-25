@@ -2,6 +2,10 @@ import { useState, useEffect, useRef } from 'react';
 import { Star, CheckCircle, PlayCircle, Clock, Edit3, X, XCircle, ChevronLeft, ChevronRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { generateRandomReview, generateUniqueReview, ReviewType } from '../data/reviewsData';
+import girl1Img from '../assets/reviewer/girl1.jpeg';
+import girl2Img from '../assets/reviewer/girl2.jpeg';
+import girl3Img from '../assets/reviewer/girl3.jpeg';
+import girl4Img from '../assets/reviewer/girl4.jpeg';
 
 const videoItems = [
   {
@@ -83,10 +87,10 @@ export default function SocialProof() {
 
             {/* Premium Mother Avatars */}
             <div className="flex -space-x-3 mb-4 justify-center">
-              <img src="https://i.pravatar.cc/150?img=1" alt="Mother" className="w-12 h-12 sm:w-14 sm:h-14 rounded-full border-2 border-white shadow-lg relative z-[1]" />
-              <img src="https://i.pravatar.cc/150?img=5" alt="Mother" className="w-12 h-12 sm:w-14 sm:h-14 rounded-full border-2 border-white shadow-lg relative z-[2]" />
-              <img src="https://i.pravatar.cc/150?img=9" alt="Mother" className="w-12 h-12 sm:w-14 sm:h-14 rounded-full border-2 border-white shadow-lg relative z-[3]" />
-              <img src="https://i.pravatar.cc/150?img=20" alt="Mother" className="w-12 h-12 sm:w-14 sm:h-14 rounded-full border-2 border-white shadow-lg relative z-[4]" />
+              <img src={girl1Img} alt="Mother" className="w-12 h-12 sm:w-14 sm:h-14 rounded-full border-2 border-white shadow-lg relative z-[1] object-cover" />
+              <img src={girl2Img} alt="Mother" className="w-12 h-12 sm:w-14 sm:h-14 rounded-full border-2 border-white shadow-lg relative z-[2] object-cover" />
+              <img src={girl3Img} alt="Mother" className="w-12 h-12 sm:w-14 sm:h-14 rounded-full border-2 border-white shadow-lg relative z-[3] object-cover" />
+              <img src={girl4Img} alt="Mother" className="w-12 h-12 sm:w-14 sm:h-14 rounded-full border-2 border-white shadow-lg relative z-[4] object-cover" />
               <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-full border-2 border-white shadow-lg relative z-[5] bg-brand-lightpink flex items-center justify-center text-brand-magenta font-bold text-xs sm:text-sm">
                 25K+
               </div>

@@ -7,21 +7,56 @@ import girl2Img from '../assets/reviewer/girl2.jpeg';
 import girl3Img from '../assets/reviewer/girl3.jpeg';
 import girl4Img from '../assets/reviewer/girl4.jpeg';
 
+function parseYouTubeUrl(urlStr: string) {
+  if (!urlStr || urlStr.startsWith('PASTE')) return null;
+
+  let videoId = '';
+  let isShort = false;
+
+  try {
+    const cleanUrl = urlStr.trim();
+    if (cleanUrl.includes('youtube.com/shorts/')) {
+      isShort = true;
+      const parts = cleanUrl.split('youtube.com/shorts/');
+      videoId = parts[1]?.split('?')[0]?.split('/')[0] || '';
+    } else if (cleanUrl.includes('youtu.be/')) {
+      const parts = cleanUrl.split('youtu.be/');
+      videoId = parts[1]?.split('?')[0]?.split('/')[0] || '';
+    } else if (cleanUrl.includes('v=')) {
+      const parts = cleanUrl.split('v=');
+      videoId = parts[1]?.split('&')[0]?.split('?')[0] || '';
+    } else if (/^[a-zA-Z0-9_-]{11}$/.test(cleanUrl)) {
+      videoId = cleanUrl;
+    }
+  } catch (e) {
+    console.error("Error parsing YouTube URL:", e);
+  }
+
+  if (!videoId) return null;
+  return { videoId, isShort };
+}
+
 const videoItems = [
   {
+    id: 1,
     title: "ডাক্তারের পরামর্শ",
-    videoUrl: "PASTE_VIDEO_LINK_1_HERE",
-    thumbnail: "PASTE_THUMBNAIL_LINK_1_HERE"
+    subtitle: "ডাক্তারদের বিশেষ দিকনির্দেশনা",
+    videoUrl: "https://youtube.com/shorts/5BnrYdhXP04?feature=share",
+    thumbnail: ""
   },
   {
+    id: 2,
     title: "মায়ের অভিজ্ঞতা",
-    videoUrl: "PASTE_VIDEO_LINK_2_HERE",
-    thumbnail: "PASTE_THUMBNAIL_LINK_2_HERE"
+    subtitle: "বাস্তব অভিজ্ঞতা ও সতস্ফূর্ত রিভিউ",
+    videoUrl: "https://youtu.be/ZuWM1WvFov4",
+    thumbnail: ""
   },
   {
+    id: 3,
     title: "মিল্কিমম সম্পর্কে জানুন",
-    videoUrl: "PASTE_VIDEO_LINK_3_HERE",
-    thumbnail: "PASTE_THUMBNAIL_LINK_3_HERE"
+    subtitle: "উপাদান, গুণাগুণ ও সঠিক সেবনবিধি",
+    videoUrl: "https://youtube.com/shorts/W9azkDTN4vs?feature=share",
+    thumbnail: ""
   }
 ];
 
@@ -33,7 +68,6 @@ export default function SocialProof() {
   const [showReviewModal, setShowReviewModal] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [activeVideoIndex, setActiveVideoIndex] = useState<number | null>(null);
-  const [currentVideoSlide, setCurrentVideoSlide] = useState(0);
 
   const [reviewForm, setReviewForm] = useState({ name: '', address: '', email: '', rating: 5, review: '', flavour: 'Dark Chocolate' });
   const [reviewErrors, setReviewErrors] = useState<string[]>([]);
@@ -67,9 +101,6 @@ export default function SocialProof() {
     timeoutId = setTimeout(addReview, nextInterval);
     return () => clearTimeout(timeoutId);
   }, []);
-
-  const nextSlide = () => setCurrentVideoSlide((p) => (p + 1) % videoItems.length);
-  const prevSlide = () => setCurrentVideoSlide((p) => (p - 1 + videoItems.length) % videoItems.length);
 
   return (
     <section className="py-12 lg:py-16 bg-[#fcfaf9] relative overflow-hidden">
@@ -175,132 +206,161 @@ export default function SocialProof() {
              <div className="inline-flex items-center gap-2 mb-4 bg-brand-lightpink/50 text-brand-magenta px-4 py-2 rounded-full border border-brand-peach/30">
                <PlayCircle size={16} /> <span className="font-bold text-sm tracking-wide">বিশেষজ্ঞদের মতামত</span>
              </div>
-            <h2 className="text-balance text-3xl sm:text-4xl font-bold text-gray-900 mb-6 leading-tight">
+            <h2 className="text-balance text-3xl sm:text-4xl font-bold text-gray-900 mb-4 leading-tight">
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-magenta to-brand-peach">ডাক্তারদের</span> পরামর্শ ও মায়েদের অভিজ্ঞতা দেখুন।
             </h2>
+            <p className="text-gray-600 max-w-xl mx-auto text-sm sm:text-base font-medium">
+              ভিডিওতে ক্লিক করে ডক্টর ও স্যাটিসফাইড মায়েদের সরাসরি অভিমত দেখুন
+            </p>
           </div>
 
-          <div className="relative w-full max-w-sm mx-auto overflow-visible px-4">
-            <motion.div 
-              className="flex w-full cursor-grab active:cursor-grabbing"
-              drag="x"
-              dragConstraints={{ left: 0, right: 0 }}
-              onDragEnd={(e, { offset, velocity }) => {
-                 if (offset.x < -50 || velocity.x < -100) nextSlide();
-                 else if (offset.x > 50 || velocity.x > 100) prevSlide();
-              }}
-              animate={{ x: `-${currentVideoSlide * 100}%` }}
-              transition={{ type: "spring", stiffness: 200, damping: 25 }}
-            >
-              {videoItems.map((video, idx) => (
-                <div 
-                  key={idx} 
-                  className="w-full shrink-0 px-2 flex justify-center" 
+          {/* Responsive 3 Video Cards Grid (No Carousel) */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 lg:gap-8 max-w-6xl mx-auto px-4">
+            {videoItems.map((video, idx) => {
+              const ytInfo = parseYouTubeUrl(video.videoUrl);
+              const hasCustomThumb = video.thumbnail && !video.thumbnail.startsWith('PASTE');
+              const ytThumb = ytInfo?.videoId ? `https://img.youtube.com/vi/${ytInfo.videoId}/hqdefault.jpg` : null;
+              const thumbUrl = hasCustomThumb ? video.thumbnail : ytThumb;
+
+              return (
+                <motion.div
+                  key={video.id || idx}
+                  whileHover={{ y: -6 }}
+                  transition={{ duration: 0.2 }}
                   onClick={() => setActiveVideoIndex(idx)}
+                  className="bg-white/80 backdrop-blur-md rounded-3xl p-3 sm:p-4 shadow-[0_10px_30px_-10px_rgba(0,0,0,0.08)] border border-white cursor-pointer group hover:shadow-[0_20px_40px_-15px_rgba(189,0,82,0.18)] transition-all duration-300 flex flex-col h-full relative"
                 >
-                  <div className="w-full aspect-[3/4] bg-white/60 backdrop-blur-md rounded-[2.5rem] p-3 shadow-[0_15px_35px_-10px_rgba(0,0,0,0.08)] border border-white cursor-pointer group hover:shadow-[0_20px_50px_-20px_rgba(189,0,82,0.15)] transition-all duration-300 relative overflow-hidden">
-                    <div className="absolute inset-0 bg-gradient-to-b from-brand-peach/5 to-transparent"></div>
-                    <div className="w-full h-full rounded-[1.8rem] overflow-hidden relative bg-gray-50 flex items-center justify-center border border-white/50 shadow-inner">
-                      <div className="absolute inset-0 bg-gradient-to-tr from-brand-peach/20 to-brand-magenta/5 group-hover:opacity-70 transition-opacity duration-300 z-10"></div>
-                      
-                      {video.thumbnail.startsWith('PASTE') ? (
-                        <div className="w-full h-full bg-gradient-to-br from-brand-peach/10 to-brand-lightpink/30 flex items-center justify-center">
-                          <span className="text-brand-magenta/40 font-medium text-sm">Thumbnail</span>
-                        </div>
-                      ) : (
-                        <img src={video.thumbnail} alt={video.title} loading="lazy" className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105 transition-opacity duration-300 opacity-0" onLoad={(e) => e.currentTarget.classList.remove('opacity-0')} />
-                      )}
-                      
-                      <div className="absolute inset-0 flex items-center justify-center z-20 pointer-events-none">
-                        <PlayCircle className="text-brand-magenta w-16 h-16 opacity-90 group-hover:scale-110 transition-transform duration-300 drop-shadow-lg rounded-full bg-white relative" />
+                  <div className="relative w-full aspect-[3/4] rounded-2xl overflow-hidden bg-gray-900 shadow-inner flex items-center justify-center">
+                    {thumbUrl ? (
+                      <img
+                        src={thumbUrl}
+                        alt={video.title}
+                        loading="lazy"
+                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                      />
+                    ) : (
+                      <div className="w-full h-full bg-gradient-to-br from-brand-magenta/80 via-brand-magenta/50 to-brand-peach flex flex-col items-center justify-center p-6 text-white text-center">
+                        <PlayCircle size={56} className="mb-3 opacity-90 text-white" />
+                        <span className="font-bold text-base">{video.title}</span>
                       </div>
-                      <div className="absolute bottom-5 left-5 right-5 z-20 pointer-events-none">
-                        <div className="bg-white/90 text-brand-magenta px-4 py-2.5 rounded-xl text-sm backdrop-blur-md font-bold shadow-lg text-center truncate border border-white">
-                          {video.title}
-                        </div>
+                    )}
+
+                    {/* Gradient Overlay for high contrast */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent group-hover:from-black/90 transition-opacity duration-300"></div>
+
+                    {/* Play Overlay Icon */}
+                    <div className="absolute inset-0 flex items-center justify-center z-10 pointer-events-none">
+                      <div className="w-16 h-16 sm:w-18 sm:h-18 rounded-full bg-brand-magenta/90 text-white flex items-center justify-center shadow-xl group-hover:scale-110 group-hover:bg-brand-magenta transition-all duration-300 border-2 border-white/40 backdrop-blur-sm">
+                        <PlayCircle size={36} className="fill-white/20 text-white translate-x-0.5" />
                       </div>
                     </div>
-                  </div>
-                </div>
-              ))}
-            </motion.div>
 
-            <div className="absolute top-1/2 -left-2 -translate-y-1/2 flex items-center z-30">
-                <button onClick={prevSlide} className="w-12 h-12 bg-white rounded-full shadow-[0_5px_15px_rgba(0,0,0,0.1)] flex items-center justify-center text-brand-magenta hover:scale-110 transition-transform duration-300 "><ChevronLeft size={24} /></button>
-            </div>
-            <div className="absolute top-1/2 -right-2 -translate-y-1/2 flex items-center z-30">
-                <button onClick={nextSlide} className="w-12 h-12 bg-white rounded-full shadow-[0_5px_15px_rgba(0,0,0,0.1)] flex items-center justify-center text-brand-magenta hover:scale-110 transition-transform duration-300 "><ChevronRight size={24} /></button>
-            </div>
+                    {/* Title & Subtitle Badge */}
+                    <div className="absolute bottom-4 left-4 right-4 z-10 text-white pointer-events-none">
+                      <span className="inline-block bg-white/20 backdrop-blur-md text-white text-[11px] font-semibold px-2.5 py-1 rounded-md mb-1.5 border border-white/20">
+                        {video.subtitle || "ভিডিও লিংক"}
+                      </span>
+                      <h3 className="font-bold text-base sm:text-lg leading-snug line-clamp-2 text-white drop-shadow-md">
+                        {video.title}
+                      </h3>
+                    </div>
+                  </div>
+                </motion.div>
+              );
+            })}
           </div>
         </div>
       </div>
 
+      {/* Video Modal Player Dialog */}
       <AnimatePresence>
         {activeVideoIndex !== null && (
           <motion.div 
             initial={{ opacity: 0 }} 
             animate={{ opacity: 1 }} 
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 backdrop-blur-sm p-4 touch-none"
+            className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 backdrop-blur-md p-4 sm:p-6 touch-none"
             onClick={() => setActiveVideoIndex(null)}
           >
+            {/* Modal Close Button */}
             <button 
-              className="absolute top-4 right-4 p-3 bg-white/10 hover:bg-white/20 rounded-full text-white transition-colors duration-300 shadow-sm z-50"
+              className="absolute top-4 right-4 sm:top-6 sm:right-6 p-3 bg-white/10 hover:bg-white/20 rounded-full text-white transition-all duration-300 shadow-lg z-[120] border border-white/20"
               onClick={(e) => { e.stopPropagation(); setActiveVideoIndex(null); }}
+              aria-label="Close video"
             >
               <X size={24} />
             </button>
+
+            {/* Navigation Arrows */}
             <button 
-              className="absolute left-4 top-1/2 -translate-y-1/2 p-3 bg-white/10 hover:bg-white/20 rounded-full text-white transition-colors duration-300 shadow-sm z-50"
+              className="absolute left-3 sm:left-6 top-1/2 -translate-y-1/2 p-3 bg-white/10 hover:bg-white/20 rounded-full text-white transition-all duration-300 shadow-lg z-[120] border border-white/20 hidden sm:flex"
               onClick={(e) => { 
                 e.stopPropagation(); 
                 setActiveVideoIndex((prev) => (prev! - 1 + videoItems.length) % videoItems.length); 
               }}
             >
-              <ChevronLeft size={32} />
+              <ChevronLeft size={28} />
             </button>
             <button 
-              className="absolute right-4 top-1/2 -translate-y-1/2 p-3 bg-white/10 hover:bg-white/20 rounded-full text-white transition-colors duration-300 shadow-sm z-50"
+              className="absolute right-3 sm:right-6 top-1/2 -translate-y-1/2 p-3 bg-white/10 hover:bg-white/20 rounded-full text-white transition-all duration-300 shadow-lg z-[120] border border-white/20 hidden sm:flex"
               onClick={(e) => { 
                 e.stopPropagation(); 
                 setActiveVideoIndex((prev) => (prev! + 1) % videoItems.length); 
               }}
             >
-              <ChevronRight size={32} />
+              <ChevronRight size={28} />
             </button>
 
+            {/* Video Box Modal */}
             <motion.div 
               initial={{ scale: 0.95, opacity: 0 }} 
               animate={{ scale: 1, opacity: 1 }} 
               exit={{ scale: 0.95, opacity: 0 }}
-              className="relative w-full max-w-[400px] aspect-[3/4] bg-black rounded-2xl overflow-hidden shadow-2xl flex items-center justify-center border border-white/10"
+              className={`relative w-full rounded-2xl sm:rounded-3xl overflow-hidden bg-black shadow-2xl border border-white/10 flex items-center justify-center ${
+                parseYouTubeUrl(videoItems[activeVideoIndex].videoUrl)?.isShort
+                  ? 'max-w-[380px] aspect-[9/16] max-h-[85vh]'
+                  : 'max-w-4xl aspect-video max-h-[85vh]'
+              }`}
               onClick={(e) => e.stopPropagation()}
-              drag="x"
-              dragConstraints={{ left: 0, right: 0 }}
-              dragElastic={0.2}
-              onDragEnd={(e, { offset }) => {
-                if (offset.x < -50) {
-                  setActiveVideoIndex((prev) => (prev! + 1) % videoItems.length);
-                } else if (offset.x > 50) {
-                  setActiveVideoIndex((prev) => (prev! - 1 + videoItems.length) % videoItems.length);
-                }
-              }}
             >
-              {videoItems[activeVideoIndex].videoUrl.startsWith('PASTE') ? (
-                <div className="text-white/50 text-center px-6">
-                  <PlayCircle size={64} className="mx-auto mb-4 opacity-50" />
-                  <p className="font-medium leading-relaxed">Video Player Placeholder</p>
-                  <p className="text-xs mt-2 opacity-60 break-all leading-relaxed">{videoItems[activeVideoIndex].videoUrl}</p>
-                </div>
-              ) : (
-                <video 
-                  src={videoItems[activeVideoIndex].videoUrl} 
-                  controls 
-                  autoPlay 
-                  playsInline
-                  className="w-full h-full object-contain"
-                />
-              )}
+              {(() => {
+                const activeVideo = videoItems[activeVideoIndex];
+                const ytInfo = parseYouTubeUrl(activeVideo.videoUrl);
+
+                if (ytInfo?.videoId) {
+                  return (
+                    <div className="relative w-full h-full overflow-hidden bg-black flex items-center justify-center">
+                      <iframe 
+                        src={`https://www.youtube.com/embed/${ytInfo.videoId}?autoplay=1&controls=1&modestbranding=1&rel=0&showinfo=0&iv_load_policy=3&disablekb=0&fs=1&playsinline=1`} 
+                        title="Video Player"
+                        className="absolute top-[-50px] left-0 w-full h-[calc(100%+100px)] scale-[1.01] border-0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowFullScreen
+                      />
+                    </div>
+                  );
+                }
+
+                if (activeVideo.videoUrl && !activeVideo.videoUrl.startsWith('PASTE')) {
+                  return (
+                    <video 
+                      src={activeVideo.videoUrl} 
+                      controls 
+                      autoPlay 
+                      playsInline
+                      className="w-full h-full object-contain"
+                    />
+                  );
+                }
+
+                return (
+                  <div className="text-white/70 text-center px-6 py-12 flex flex-col items-center justify-center">
+                    <PlayCircle size={64} className="mx-auto mb-4 opacity-50 text-brand-magenta" />
+                    <p className="font-semibold text-lg">{activeVideo.title}</p>
+                    <p className="text-xs mt-2 opacity-50 break-all">{activeVideo.videoUrl}</p>
+                  </div>
+                );
+              })()}
             </motion.div>
           </motion.div>
         )}

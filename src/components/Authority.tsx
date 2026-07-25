@@ -1,11 +1,15 @@
 import { Stethoscope, Building2, CheckCircle2 } from 'lucide-react';
 import { motion } from 'motion/react';
+import saddamImg from '../assets/doctors/saddam.png';
+import nazmulImg from '../assets/doctors/nazmul.png';
+import hadisImg from '../assets/doctors/hadis.png';
+import wahidImg from '../assets/doctors/wahid.png';
 
 const DOCTORS = [
-  { name: 'Dr. Md Saddam', desig: 'Gynecologist', img: 'https://api.dicebear.com/7.x/notionists/svg?seed=Saddam&backgroundColor=ffe3df' },
-  { name: 'Dr. Md Nazmul', desig: 'Doctor', img: 'https://api.dicebear.com/7.x/notionists/svg?seed=Nazmul&backgroundColor=ffe3df' },
-  { name: 'Dr. Md Hadis', desig: 'Doctor', img: 'https://api.dicebear.com/7.x/notionists/svg?seed=Hadis&backgroundColor=ffe3df' },
-  { name: 'Dr. Wahidur Rahman', desig: 'Doctor', img: 'https://api.dicebear.com/7.x/notionists/svg?seed=Wahidur&backgroundColor=ffe3df' },
+  { name: 'Dr. Md Saddam', desig: 'Doctor', img: saddamImg },
+  { name: 'Dr. Md Nazmul', desig: 'Doctor', img: nazmulImg },
+  { name: 'Dr. Md Hadis', desig: 'Doctor', img: hadisImg },
+  { name: 'Dr. Wahidur Rahman', desig: 'Doctor', img: wahidImg },
 ];
 
 const HOSPITALS = [
@@ -48,7 +52,7 @@ export default function Authority() {
           </h2>
         </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-8">
+        <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 max-w-5xl mx-auto gap-3 sm:gap-5 mb-8">
           {DOCTORS.map((doc, i) => (
              <motion.div 
                 key={i}
@@ -58,11 +62,11 @@ export default function Authority() {
                 transition={{ delay: i * 0.1 }}
                 className="bg-white/80 backdrop-blur-md rounded-2xl p-4 sm:p-5 text-center border border-white shadow-[0_10px_20px_-10px_rgba(0,0,0,0.05)] group hover:-translate-y-1 hover:shadow-lg transition-all duration-300 relative overflow-hidden flex flex-col items-center"
              >
-               <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-brand-peach to-brand-lightpink opacity-0 group-hover:opacity-100 transition-all duration-300 -opacity"></div>
+               <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-brand-peach to-brand-lightpink opacity-0 group-hover:opacity-100 transition-all duration-300"></div>
                
-               <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full mb-3 p-1 bg-gradient-to-br from-brand-peach/30 to-brand-magenta/20 shadow-sm relative group-transition-transform duration-300 group-hover:scale-105 ">
+               <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full mb-3 p-1 bg-gradient-to-br from-brand-peach/30 to-brand-magenta/20 shadow-sm relative group-transition-transform duration-300 group-hover:scale-105">
                  <div className="w-full h-full rounded-full overflow-hidden bg-white border-2 border-white relative">
-                   <img src={doc.img} alt={doc.name} className="w-full h-full object-cover transition-opacity duration-300 opacity-0" onLoad={(e) => e.currentTarget.classList.remove('opacity-0')} />
+                   <img src={doc.img} alt={doc.name} className="w-full h-full object-cover object-top" />
                  </div>
                  <div className="absolute -bottom-1 -right-1 bg-white rounded-full p-0.5 shadow-sm">
                    <CheckCircle2 className="text-[#10b981] w-4 h-4 sm:w-5 sm:h-5" fill="currentColor" stroke="white" />

@@ -2,14 +2,28 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Shield, FlaskConical, Award, Leaf, Stethoscope, Droplet, Microscope, X, ChevronLeft, ChevronRight } from 'lucide-react';
 
-const BADGES = [
-  { icon: FlaskConical, label: 'Lab Tested' },
-  { icon: Award, label: 'BSTI' },
-  { icon: Shield, label: 'ISO 22000' },
-  { icon: Award, label: 'GMP' },
-  { icon: Shield, label: 'H.A.C.C.P' },
-  { icon: Droplet, label: 'Halal' },
-  { icon: Leaf, label: 'Vegan' },
+import bcsirImg from '../assets/certificates/BCSIR.png';
+import bstiImg from '../assets/certificates/BSTI.png';
+import gmpImg from '../assets/certificates/GMP.png';
+import haccpImg from '../assets/certificates/HACCP.png';
+import halalImg from '../assets/certificates/HALAL.png';
+import isoImg from '../assets/certificates/ISO 22.png';
+import veganImg from '../assets/certificates/Vegan,,,.png';
+
+interface Badge {
+  icon: React.ElementType;
+  image?: string;
+  label: string;
+}
+
+const BADGES: Badge[] = [
+  { icon: FlaskConical, image: bcsirImg, label: 'Lab Tested' },
+  { icon: Award, image: bstiImg, label: 'BSTI' },
+  { icon: Shield, image: isoImg, label: 'ISO 22000' },
+  { icon: Award, image: gmpImg, label: 'GMP' },
+  { icon: Shield, image: haccpImg, label: 'H.A.C.C.P' },
+  { icon: Droplet, image: halalImg, label: 'Halal' },
+  { icon: Leaf, image: veganImg, label: 'Vegan' },
   { icon: Stethoscope, label: 'Doctor Suggested' },
   { icon: Microscope, label: 'Clinical Research' },
   { icon: Leaf, label: 'Imported Ingredients' },
@@ -77,12 +91,20 @@ export default function TrustBadges() {
               className="flex flex-col items-center gap-2 w-28 sm:w-32 group cursor-pointer"
               onClick={() => setSelectedBadge(i)}
             >
-              <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-brand-cream to-white border border-brand-gold/20 flex items-center justify-center shadow-sm group-hover:shadow-md group-hover:border-brand-gold/50 transition-all duration-300 relative overflow-hidden">
+              <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-brand-cream to-white border border-brand-gold/20 flex items-center justify-center shadow-sm group-hover:shadow-md group-hover:border-brand-gold/50 transition-all duration-300 relative overflow-hidden p-2">
                 <div className="absolute inset-0 bg-brand-gold opacity-0 group-hover:opacity-10 transition-all duration-300 -opacity"></div>
                 {/* Shimmer effect */}
                 <div className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white to-transparent opacity-50 group-hover:animate-[shimmer_1.5s_infinite]"></div>
                 
-                <badge.icon className="text-brand-magenta group-hover:scale-110 transition-transform duration-300 " size={28} />
+                {badge.image ? (
+                  <img 
+                    src={badge.image} 
+                    alt={badge.label} 
+                    className="w-full h-full object-contain group-hover:scale-110 transition-transform duration-300 relative z-10" 
+                  />
+                ) : (
+                  <badge.icon className="text-brand-magenta group-hover:scale-110 transition-transform duration-300 relative z-10" size={28} />
+                )}
               </div>
               <span className="text-xs sm:text-sm font-semibold text-gray-700 text-center leading-tight">
                 {badge.label}
@@ -150,10 +172,18 @@ export default function TrustBadges() {
                 {/* Header with inside close button */}
                 <div className="bg-brand-cream/30 p-4 border-b border-gray-100 flex items-center justify-center relative">
                   <div className="flex items-center justify-center gap-2 px-8">
-                    {BADGES[selectedBadge].icon && (() => {
-                      const Icon = BADGES[selectedBadge].icon;
-                      return <Icon className="text-brand-magenta shrink-0" size={24} />;
-                    })()}
+                    {BADGES[selectedBadge].image ? (
+                      <img 
+                        src={BADGES[selectedBadge].image} 
+                        alt={BADGES[selectedBadge].label} 
+                        className="w-6 h-6 object-contain shrink-0" 
+                      />
+                    ) : (
+                      (() => {
+                        const Icon = BADGES[selectedBadge].icon;
+                        return <Icon className="text-brand-magenta shrink-0" size={24} />;
+                      })()
+                    )}
                     <h3 className="text-base sm:text-2xl font-bold text-gray-900 text-center leading-tight">
                       {BADGES[selectedBadge].label}
                     </h3>
@@ -175,12 +205,24 @@ export default function TrustBadges() {
 
                 {/* Certificate Image Container */}
                 <div className="relative bg-gray-50 flex items-center justify-center overflow-hidden w-full aspect-auto sm:aspect-[4/3] p-[10px] min-[380px]:p-4 sm:p-8">
-                  <img
-                    src={`https://placehold.co/800x1000/fdfbfb/bd0052?text=${BADGES[selectedBadge].label.replace(/ /g, '+')}`}
-                    alt={BADGES[selectedBadge].label}
-                    className="w-full h-auto max-h-[68vh] min-[380px]:max-h-[70vh] sm:h-full sm:max-h-none object-contain rounded-lg transition-opacity duration-300 opacity-0" 
-                    onLoad={(e) => e.currentTarget.classList.remove('opacity-0')}
-                  />
+                  {BADGES[selectedBadge].image ? (
+                    <img
+                      key={selectedBadge}
+                      src={BADGES[selectedBadge].image}
+                      alt={BADGES[selectedBadge].label}
+                      className="w-full h-auto max-h-[68vh] min-[380px]:max-h-[70vh] sm:h-full sm:max-h-none object-contain rounded-lg transition-opacity duration-300 opacity-0" 
+                      onLoad={(e) => e.currentTarget.classList.remove('opacity-0')}
+                    />
+                  ) : (
+                    <div className="flex flex-col items-center justify-center p-12 text-center my-auto">
+                      {(() => {
+                        const Icon = BADGES[selectedBadge].icon;
+                        return <Icon className="text-brand-magenta w-20 h-20 mb-4" />;
+                      })()}
+                      <h4 className="text-xl font-bold text-gray-800 mb-2">{BADGES[selectedBadge].label}</h4>
+                      <p className="text-sm text-gray-500 max-w-md">আমাদের সকল উপাদান শতভাগ সার্টিফাইড ও ল্যাব টেস্ট সম্পন্ন।</p>
+                    </div>
+                  )}
                   <div className="absolute inset-0 border-[10px] min-[380px]:border-[16px] sm:border-[16px] border-white/50 pointer-events-none rounded-lg"></div>
                 </div>
               </div>
@@ -202,3 +244,4 @@ export default function TrustBadges() {
     </section>
   );
 }
+

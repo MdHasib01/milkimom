@@ -50,7 +50,7 @@ export default function Pricing() {
               {/* Previous Price - Subtle */}
               <div className="flex flex-col items-center">
                 <span className="text-gray-400 font-medium text-sm">আগের মূল্য</span>
-                <span className="text-lg sm:text-xl text-gray-400 line-through font-medium mt-1">৳<span className="bengali-num">৮৯৯০</span></span>
+                <span className="text-lg sm:text-xl text-gray-400 line-through font-medium mt-1"><span className="bengali-num">৮৯৯০</span>/=</span>
                 <span className="text-xs text-gray-400 mt-1">(আট হাজার নয়শত নব্বই টাকা)</span>
               </div>
               
@@ -59,7 +59,7 @@ export default function Pricing() {
               {/* Current Offer - Highest Emphasis */}
               <div className="flex flex-col items-center py-2">
                 <span className="text-gray-900 font-bold text-lg mb-2 uppercase tracking-wide">বর্তমান অফার</span>
-                <span className="text-6xl sm:text-7xl text-brand-magenta font-bold tracking-tight drop-shadow-sm">৳<span className="bengali-num">৪৯৯০</span></span>
+                <span className="text-6xl sm:text-7xl text-brand-magenta font-bold tracking-tight drop-shadow-sm"><span className="bengali-num">৪৯৯০</span>/=</span>
                 <span className="text-sm font-medium text-gray-500 mt-3">(চার হাজার নয়শত নব্বই টাকা)</span>
               </div>
               
@@ -68,7 +68,7 @@ export default function Pricing() {
               {/* Savings - Moderate Emphasis */}
               <div className="flex flex-col items-center bg-green-50/50 py-3 px-5 rounded-xl">
                 <span className="text-green-700 font-medium text-sm">বাঁচলো টাকা</span>
-                <span className="text-xl sm:text-2xl font-bold text-green-700 mt-0.5">৳<span className="bengali-num">৪০০০</span></span>
+                <span className="text-xl sm:text-2xl font-bold text-green-700 mt-0.5"><span className="bengali-num">৪০০০</span>/=</span>
               </div>
             </div>
 

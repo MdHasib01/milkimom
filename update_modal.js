@@ -100,11 +100,11 @@ const newModal = `{/* Checkout Popup */}
                       </div>
                       <div className="flex justify-between border-b border-gray-200 pb-2">
                         <span className="text-gray-600">ডেলিভারি চার্জ:</span>
-                        <span className="font-bold text-gray-900">{isFreeDelivery ? 'FREE' : '৳১৫০'}</span>
+                        <span className="font-bold text-gray-900">{isFreeDelivery ? 'FREE' : '১৫০/='}</span>
                       </div>
                       <div className="flex justify-between pt-2">
                         <span className="text-gray-900 font-bold">মোট বিল:</span>
-                        <span className="font-bold text-brand-magenta bengali-num text-lg">৳{toBengaliNum(totalPrice)}</span>
+                        <span className="font-bold text-brand-magenta bengali-num text-lg">{toBengaliNum(totalPrice)}/=</span>
                       </div>
                     </div>
                   </div>
@@ -192,7 +192,7 @@ const newModal = `{/* Checkout Popup */}
                       <div className="space-y-6">
                         <div className="text-center">
                           <h4 className="text-lg font-bold text-gray-900 mb-2">bKash Payment</h4>
-                          <p className="text-gray-600 text-sm">নিচের নাম্বারে ৳{toBengaliNum(totalPrice)} সেন্ড মানি করুন</p>
+                          <p className="text-gray-600 text-sm">নিচের নাম্বারে {toBengaliNum(totalPrice)}/= সেন্ড মানি করুন</p>
                         </div>
                         
                         <div className="bg-gray-50 p-6 rounded-2xl border border-gray-100 text-center">
@@ -226,7 +226,7 @@ const newModal = `{/* Checkout Popup */}
                         </div>
                         <h4 className="text-xl font-bold text-gray-900">Cash on Delivery</h4>
                         <p className="text-gray-600">
-                          প্রোডাক্ট হাতে পেয়ে ডেলিভারি ম্যানকে ৳{toBengaliNum(totalPrice)} পেমেন্ট করবেন।
+                          প্রোডাক্ট হাতে পেয়ে ডেলিভারি ম্যানকে {toBengaliNum(totalPrice)}/= পেমেন্ট করবেন।
                         </p>
                       </div>
                     )}

@@ -59,8 +59,8 @@ export default function FloatingActions() {
             <div className="flex items-center justify-between w-full lg:w-auto gap-2 sm:gap-6">
               {/* PRICE */}
               <div className="text-left sm:text-right shrink-0">
-                <p className="text-[10px] sm:text-[11px] font-bold text-white/80 line-through leading-none bengali-num">৳৮৯৯০</p>
-                <p className="text-base sm:text-xl font-black text-white bengali-num leading-tight">৳৪৯৯০</p>
+                <p className="text-[10px] sm:text-[11px] font-bold text-white/80 line-through leading-none bengali-num">৮৯৯০/=</p>
+                <p className="text-base sm:text-xl font-black text-white bengali-num leading-tight">৪৯৯০/=</p>
               </div>
 
               {/* TIMER */}

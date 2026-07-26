@@ -814,7 +814,7 @@ Make Mother Great Again.`;
                          <div className="flex-1">
                            <div className="flex items-center justify-between">
                              <span className="font-bold text-gray-900 block text-sm">Pay Now (bKash)</span>
-                             <span className="bg-brand-red text-white text-[9px] font-bold px-1.5 py-0.5 rounded uppercase flex items-center gap-0.5 bengali-num"><Gift size={10}/> ১০০ ৳ ক্যাশব্যাক</span>
+                             <span className="bg-brand-red text-white text-[9px] font-bold px-1.5 py-0.5 rounded uppercase flex items-center gap-0.5 bengali-num"><Gift size={10}/> ১০০/= ক্যাশব্যাক</span>
                            </div>
                            <span className="text-xs text-gray-500">অনলাইনে পেমেন্ট করে <span className="bengali-num">১০০</span> টাকা ক্যাশব্যাক নিন</span>
                          </div>
@@ -850,7 +850,7 @@ Make Mother Great Again.`;
                                 <li>আপনার বিকাশ মোবাইল অ্যাপ অথবা <span className="font-mono font-bold">*247#</span> ডায়াল করুন।</li>
                                 <li><strong className="text-gray-900">Send Money</strong> অপশনটি সিলেক্ট করুন।</li>
                                 <li>প্রাপক নম্বর লিখুন: <strong className="font-mono text-brand-magenta text-sm">01926-344244</strong></li>
-                                <li>মোট পরিমাণ: <strong className="bengali-num text-brand-magenta font-bold">৳{toBengaliNum(totalPrice)}</strong> টাকা দিয়ে পিন দিন।</li>
+                                <li>মোট পরিমাণ: <strong className="bengali-num text-brand-magenta font-bold">{toBengaliNum(totalPrice)}/=</strong> টাকা দিয়ে পিন দিন।</li>
                                 <li>সেন্ড মানি সফল হওয়ার পর প্রাপ্ত <strong className="text-gray-900">Transaction ID (TrxID)</strong> নিচের ইনপুট বক্সে লিখুন।</li>
                               </ol>
                             </div>
@@ -943,7 +943,7 @@ Make Mother Great Again.`;
                      <span className="block font-bold text-gray-800">মিল্কিমম কমপ্লিট ডোজ</span>
                      <span className="text-gray-500 text-xs">Flavour: {FLAVOURS_DATA.find(f => f.id === selectedFlavour)?.name}</span>
                    </div>
-                   <span className="font-bold text-gray-900 bengali-num">৪৯৯০ ৳</span>
+                   <span className="font-bold text-gray-900 bengali-num">৪৯৯০/=</span>
                  </div>
                  
                  {/* Delivery Charge Card */}
@@ -959,13 +959,13 @@ Make Mother Great Again.`;
                      <div className="text-right flex flex-col items-end">
                        {isFreeDelivery ? (
                          <div className="flex items-center gap-1.5">
-                           <span className="text-xs font-bold text-gray-400 line-through">৳১৫০</span>
+                           <span className="text-xs font-bold text-gray-400 line-through">১৫০/=</span>
                            <span className="font-bold text-[#2E7D32] text-xs bg-green-100/50 px-2 py-0.5 rounded-md border border-green-200/50">
                              ফ্রি
                            </span>
                          </div>
                        ) : (
-                         <span className="font-bold text-gray-900 bengali-num text-sm">৳১৫০</span>
+                         <span className="font-bold text-gray-900 bengali-num text-sm">১৫০/=</span>
                        )}
                      </div>
                    </div>
@@ -995,7 +995,7 @@ Make Mother Great Again.`;
                <div className="border-t border-gray-200 pt-4 flex justify-between items-center">
                  <span className="font-bold text-gray-900 uppercase">Total:</span>
                  <span className="font-bold text-2xl text-brand-magenta bengali-num">
-                   {toBengaliNum(totalPrice)} ৳
+                   {toBengaliNum(totalPrice)}/=
                  </span>
                </div>
                
@@ -1147,7 +1147,7 @@ Make Mother Great Again.`;
                           </p>
                           <ol className="list-decimal list-inside space-y-1 text-gray-700 leading-relaxed font-medium">
                             <li>bKash অ্যাপ বা <span className="font-mono font-bold">*247#</span> ডায়াল করে <strong>Send Money</strong> সিলেক্ট করুন।</li>
-                            <li>নম্বর: <strong className="font-mono text-brand-magenta">01926-344244</strong> | পরিমাণ: <strong className="bengali-num text-brand-magenta">৳{toBengaliNum(totalPrice)}</strong></li>
+                            <li>নম্বর: <strong className="font-mono text-brand-magenta">01926-344244</strong> | পরিমাণ: <strong className="bengali-num text-brand-magenta">{toBengaliNum(totalPrice)}/=</strong></li>
                             <li>পেমেন্ট সম্পূর্ণ হলে প্রাপ্ত <strong>Transaction ID (TrxID)</strong> নিচে বসান।</li>
                           </ol>
                         </div>
@@ -1199,7 +1199,7 @@ Make Mother Great Again.`;
                           </div>
                           <div className="flex justify-between pt-1">
                             <span className="text-gray-900 font-bold">Total:</span>
-                            <span className="font-bold text-brand-magenta bengali-num text-lg">৳{toBengaliNum(totalPrice)}</span>
+                            <span className="font-bold text-brand-magenta bengali-num text-lg">{toBengaliNum(totalPrice)}/=</span>
                           </div>
                         </div>
                       </div>

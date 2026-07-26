@@ -174,14 +174,14 @@ export default function Invoice() {
                   <p className="text-xs text-gray-500">Flavour: {order.flavour} — 15 Days Only</p>
                 </td>
                 <td className="py-4 text-center text-gray-700">1</td>
-                <td className="py-4 text-right font-bold text-gray-900">৳{order.price}</td>
+                <td className="py-4 text-right font-bold text-gray-900">{order.price}/=</td>
               </tr>
             </tbody>
             <tfoot>
               <tr>
                 <td></td>
                 <td className="py-4 text-right font-bold text-gray-500 uppercase text-xs tracking-wider">Total</td>
-                <td className="py-4 text-right font-black text-2xl text-brand-magenta whitespace-nowrap">৳{order.price}</td>
+                <td className="py-4 text-right font-black text-2xl text-brand-magenta whitespace-nowrap">{order.price}/=</td>
               </tr>
             </tfoot>
           </table>
@@ -201,14 +201,14 @@ export default function Invoice() {
                 <>পেমেন্ট bKash-এর মাধ্যমে সম্পন্ন হয়েছে এবং অর্ডারটি কনফার্ম করা হয়েছে। ধন্যবাদ!</>
               )}
               {!isPaid && isConfirmed && (
-                <>অর্ডারটি কনফার্ম করা হয়েছে। ডেলিভারির সময় ক্যাশ অন ডেলিভারিতে <strong>৳{order.price}</strong> পরিশোধ করুন।</>
+                <>অর্ডারটি কনফার্ম করা হয়েছে। ডেলিভারির সময় ক্যাশ অন ডেলিভারিতে <strong>{order.price}/=</strong> পরিশোধ করুন।</>
               )}
               {!isConfirmed && (
                 <>
                   অর্ডারটি এখনো কনফার্ম হয়নি — আমাদের টিম শীঘ্রই যাচাই করে কনফার্ম করবে।{' '}
                   {isPaid
                     ? 'আপনার bKash পেমেন্টটি যাচাই করা হচ্ছে।'
-                    : `ডেলিভারির সময় ক্যাশ অন ডেলিভারিতে ৳${order.price} পরিশোধ করতে হবে।`}
+                    : `ডেলিভারির সময় ক্যাশ অন ডেলিভারিতে ${order.price}/= পরিশোধ করতে হবে।`}
                 </>
               )}
             </div>

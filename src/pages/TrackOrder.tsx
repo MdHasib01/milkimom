@@ -77,7 +77,7 @@ export default function TrackOrder() {
                     <p className="font-bold text-gray-900">{order.product}</p>
                     <p className="text-sm text-gray-500">Flavour: {order.flavour}</p>
                   </div>
-                  <p className="font-black text-brand-magenta text-xl">৳{order.price}</p>
+                  <p className="font-black text-brand-magenta text-xl">{order.price}/=</p>
                 </div>
                 <div className="text-sm text-gray-600 space-y-1.5">
                   <p><span className="font-semibold text-gray-800">নাম:</span> {order.customerName}</p>

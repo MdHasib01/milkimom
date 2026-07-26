@@ -67,7 +67,7 @@ export default function Checkout() {
             </div>
           </div>
           <div className="text-right">
-            <p className="text-2xl sm:text-3xl font-black text-brand-magenta drop-shadow-sm">৳<span className="bengali-num">৪৯৯০</span></p>
+            <p className="text-2xl sm:text-3xl font-black text-brand-magenta drop-shadow-sm"><span className="bengali-num">৪৯৯০</span>/=</p>
           </div>
         </div>
 

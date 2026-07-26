@@ -140,7 +140,7 @@ export default function AdminOrders() {
                       <p className="text-[11px] font-mono text-gray-400">{order.transactionId}</p>
                     )}
                   </td>
-                  <td className="px-4 py-3 font-bold text-gray-900 whitespace-nowrap">৳{order.price}</td>
+                  <td className="px-4 py-3 font-bold text-gray-900 whitespace-nowrap">{order.price}/=</td>
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-2">
                       <select

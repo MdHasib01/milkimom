@@ -1,7 +1,7 @@
 import { motion } from 'motion/react';
 import { Check, X, ArrowRight } from 'lucide-react';
 import formulaMountainImg from '../assets/images/formula_mountain_1782105493500.jpg';
-import carousel2 from '../assets/carousel2.jpg';
+import carousel1 from '../assets/carousel1.png';
 
 const TABLE_DATA = [
   { m: 'পার্মানেন্ট সলিউশন', o: 'সাময়িক সমাধান' },
@@ -60,7 +60,7 @@ export default function Comparison() {
               viewport={{ once: true }}
               className="relative rounded-2xl overflow-hidden shadow-[0_20px_50px_-20px_rgba(189,0,82,0.15)] aspect-[16/9] border border-white group"
             >
-              <img src={carousel2} alt="Milkimom Supplement Jar" className="absolute inset-0 w-full h-full object-cover transition-transform duration-300 group-hover:scale-105 transition-opacity duration-300 opacity-0" onLoad={(e) => e.currentTarget.classList.remove('opacity-0')} />
+              <img src={carousel1} alt="Milkimom Supplement Jar" className="absolute inset-0 w-full h-full object-cover transition-transform duration-300 group-hover:scale-105 transition-opacity duration-300 opacity-0" onLoad={(e) => e.currentTarget.classList.remove('opacity-0')} />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex flex-col justify-end p-4 z-10">
                  <div className="inline-flex items-center gap-2 mb-2 bg-green-500/20 backdrop-blur-md text-green-50 px-4 py-2 rounded-full w-fit border border-green-500/30">
                    <Check size={18} className="text-green-400" /> <span className="font-bold text-sm tracking-wide">একবারের ইনভেস্টমেন্ট</span>

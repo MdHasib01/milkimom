@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
 import { useMotherCounter } from '../hooks/useMotherCounter';
 import { Check, Square, Heart, ArrowRight } from 'lucide-react';
@@ -20,6 +21,7 @@ function toBengaliNum(num: number | string): string {
 }
 
 export default function ObjectionNormalization() {
+  const navigate = useNavigate();
   const { total: masterMotherCount } = useMotherCounter();
   const [checkedCount, setCheckedCount] = useState(0);
   const [hasStarted, setHasStarted] = useState(false);
@@ -54,11 +56,8 @@ export default function ObjectionNormalization() {
     };
   }, []);
 
-  const handleScrollToGuarantee = () => {
-    const el = document.getElementById('satisfaction-guarantee');
-    if (el) {
-      el.scrollIntoView({ behavior: 'smooth' });
-    }
+  const handleGoToCheckout = () => {
+    navigate("/checkout");
   };
 
   const isAllChecked = checkedCount >= objections.length;
@@ -171,7 +170,7 @@ export default function ObjectionNormalization() {
 
                 <div className="pt-2 flex justify-center">
                   <button 
-                    onClick={handleScrollToGuarantee}
+                    onClick={handleGoToCheckout}
                     className="group relative inline-flex gap-3 px-8 sm:px-10 py-4 sm:py-5 bg-gradient-to-r from-brand-magenta to-brand-peach text-white sm:text-lg rounded-2xl overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-lg active:scale-95 shadow-[0_15px_30px_-10px_rgba(189,0,82,0.35)] w-full sm:w-auto hover:shadow-[0_20px_45px_-12px_rgba(189,0,82,0.5)] cursor-pointer text-lg font-bold whitespace-nowrap text-center flex items-center justify-center"
                   >
                     <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300 "></div>

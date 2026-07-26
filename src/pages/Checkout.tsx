@@ -3,6 +3,7 @@ import { ShieldCheck, Truck, CreditCard, Users } from 'lucide-react';
 import OrderForm from '../components/OrderForm';
 import { useMotherCounter } from '../hooks/useMotherCounter';
 import logoImg from '../assets/logo.png';
+import carousel1 from '../assets/carousel1.png';
 
 export default function Checkout() {
   const { total: masterMotherCount } = useMotherCounter();
@@ -57,12 +58,12 @@ export default function Checkout() {
         {/* 2. Selected Product */}
         <div className="bg-white rounded-2xl p-4 sm:p-6 shadow-sm border border-brand-peach/20 mb-8 flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <div className="w-16 h-16 bg-brand-lightpink rounded-xl flex items-center justify-center border border-brand-peach/10 p-2">
-              <img src={logoImg} alt="Milkimom" className="w-full h-full object-contain" />
+            <div className="w-16 h-16 bg-brand-lightpink rounded-xl flex items-center justify-center border border-brand-peach/10 p-2 overflow-hidden">
+              <img src={carousel1} alt="Milkimom" className="w-full h-full object-cover rounded-lg" />
             </div>
             <div>
               <h2 className="font-bold text-lg sm:text-xl text-gray-900">Milkimom Complete Dose</h2>
-              <p className="text-sm text-gray-500 font-medium">15 Days Formula</p>
+              <p className="text-sm text-gray-500 font-medium">15 Days Only</p>
             </div>
           </div>
           <div className="text-right">

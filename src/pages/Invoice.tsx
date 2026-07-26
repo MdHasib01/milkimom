@@ -171,7 +171,7 @@ export default function Invoice() {
               <tr className="border-b border-gray-100">
                 <td className="py-4">
                   <p className="font-bold text-gray-900">{order.product}</p>
-                  <p className="text-xs text-gray-500">Flavour: {order.flavour} — 15 Days Formula</p>
+                  <p className="text-xs text-gray-500">Flavour: {order.flavour} — 15 Days Only</p>
                 </td>
                 <td className="py-4 text-center text-gray-700">1</td>
                 <td className="py-4 text-right font-bold text-gray-900">৳{order.price}</td>

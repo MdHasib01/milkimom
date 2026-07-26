@@ -88,7 +88,7 @@ export default function SatisfactionGuarantee() {
               onClick={handleScrollToOrder}
               className="group relative inline-flex items-center justify-center gap-3 bg-gradient-to-r from-[#ff8f80] to-[#e87b6b] text-white px-6 sm:px-10 py-4 sm:py-5 rounded-full text-base sm:text-lg font-bold shadow-[0_10px_30px_-10px_rgba(232,123,107,0.5)] hover:shadow-[0_15px_40px_-10px_rgba(232,123,107,0.6)] transform hover:-translate-y-1 transition-all duration-300 w-full sm:w-auto"
             >
-              <span>টাকা ফেরত নয়, বাবুর দুধ যাতে পায় এজন্য মিল্কিমম অর্ডার করছি</span>
+              <span>বাবুর দুধ যাতে পায় এজন্য মিল্কিমম অর্ডার করছি</span>
               <ArrowRight size={24} className="group-hover:translate-x-1 transition-transform duration-300 " />
             </button>
           </div>

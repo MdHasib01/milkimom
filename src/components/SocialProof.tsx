@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { Star, CheckCircle, PlayCircle, Clock, Edit3, X, XCircle, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Star, CheckCircle, PlayCircle, Clock, Edit3, X, XCircle, ChevronLeft, ChevronRight, ChevronDown } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { generateRandomReview, generateUniqueReview, ReviewType } from '../data/reviewsData';
 import girl1Img from '../assets/reviewer/girl1.jpeg';
@@ -62,8 +62,13 @@ const videoItems = [
 ];
 
 export default function SocialProof() {
+  const [visibleCount, setVisibleCount] = useState(4);
   const [reviews, setReviews] = useState<ReviewType[]>(() => {
-    return [generateRandomReview(), generateRandomReview(), generateRandomReview(), generateRandomReview()];
+    const initialPool: ReviewType[] = [];
+    for (let i = 0; i < 16; i++) {
+      initialPool.push(generateUniqueReview(initialPool));
+    }
+    return initialPool;
   });
   
   const [showReviewModal, setShowReviewModal] = useState(false);
@@ -72,6 +77,22 @@ export default function SocialProof() {
 
   const [reviewForm, setReviewForm] = useState({ name: '', address: '', email: '', rating: 5, review: '', flavour: 'Dark Chocolate' });
   const [reviewErrors, setReviewErrors] = useState<string[]>([]);
+
+  const handleShowMore = () => {
+    setVisibleCount(prev => {
+      const nextCount = prev + 4;
+      if (reviews.length < nextCount + 4) {
+        setReviews(current => {
+          const added: ReviewType[] = [];
+          for (let i = 0; i < 8; i++) {
+            added.push(generateUniqueReview([...current, ...added]));
+          }
+          return [...current, ...added];
+        });
+      }
+      return nextCount;
+    });
+  };
 
   const handleReviewSubmit = (e: any) => {
     e.preventDefault();
@@ -93,7 +114,7 @@ export default function SocialProof() {
     const addReview = () => {
       setReviews(prev => {
         const newReview = generateUniqueReview(prev);
-        return [newReview, ...prev].slice(0, 20);
+        return [newReview, ...prev];
       });
       const nextInterval = Math.floor(Math.random() * 10000) + 12000;
       timeoutId = setTimeout(addReview, nextInterval);
@@ -146,10 +167,10 @@ export default function SocialProof() {
 
           <div className="absolute top-0 inset-x-8 h-px bg-gradient-to-r from-transparent via-brand-peach/50 to-transparent"></div>
           
-          <div className="max-h-[650px] overflow-y-auto pr-2 sm:pr-4 [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-brand-peach/10 [&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-thumb]:bg-brand-peach/50 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-brand-magenta/50 transition-colors duration-300 ">
-            <div className="grid md:grid-cols-2 gap-4 sm:gap-6 pb-4">
+          <div className="relative">
+            <div className="grid md:grid-cols-2 gap-4 sm:gap-6 pb-2">
               <AnimatePresence initial={false}>
-                {reviews.map((r) => (
+                {reviews.slice(0, visibleCount).map((r) => (
                   <motion.div 
                     key={r.id}
                     layout={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
@@ -187,7 +208,25 @@ export default function SocialProof() {
                 ))}
               </AnimatePresence>
             </div>
+
+            {/* Bottom Blend Effect Gradient Fade */}
+            {visibleCount < reviews.length && (
+              <div className="absolute bottom-0 inset-x-0 h-40 bg-gradient-to-t from-[#fcfaf9] via-[#fcfaf9]/85 to-transparent pointer-events-none z-10" />
+            )}
           </div>
+
+          {/* Show More Button */}
+          {visibleCount < reviews.length && (
+            <div className="mt-4 text-center relative z-20">
+              <button
+                onClick={handleShowMore}
+                className="inline-flex items-center gap-2 px-7 py-3.5 bg-white text-brand-magenta border-2 border-brand-peach/40 hover:border-brand-magenta hover:bg-brand-lightpink/30 rounded-full font-bold text-sm sm:text-base shadow-md hover:shadow-lg hover:-translate-y-0.5 active:scale-95 transition-all duration-300 group cursor-pointer"
+              >
+                <span>আরও রিভিউ দেখুন</span>
+                <ChevronDown size={18} className="group-hover:translate-y-0.5 transition-transform duration-300" />
+              </button>
+            </div>
+          )}
           
           <div className="absolute bottom-0 inset-x-8 h-px bg-gradient-to-r from-transparent via-brand-peach/50 to-transparent"></div>
 

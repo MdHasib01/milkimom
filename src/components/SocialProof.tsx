@@ -75,6 +75,36 @@ export default function SocialProof() {
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [activeVideoIndex, setActiveVideoIndex] = useState<number | null>(null);
 
+  const videoScrollRef = useRef<HTMLDivElement>(null);
+  const [canScrollVideosLeft, setCanScrollVideosLeft] = useState(false);
+  const [canScrollVideosRight, setCanScrollVideosRight] = useState(false);
+
+  const updateVideoScrollButtons = () => {
+    const el = videoScrollRef.current;
+    if (!el) return;
+    setCanScrollVideosLeft(el.scrollLeft > 4);
+    setCanScrollVideosRight(el.scrollLeft < el.scrollWidth - el.clientWidth - 4);
+  };
+
+  const scrollVideos = (direction: 1 | -1) => {
+    const el = videoScrollRef.current;
+    if (!el) return;
+    const firstCard = el.querySelector('[data-carousel-item]') as HTMLElement | null;
+    const amount = firstCard ? firstCard.offsetWidth + 24 : el.clientWidth * 0.85;
+    el.scrollBy({ left: direction * amount, behavior: 'smooth' });
+  };
+
+  useEffect(() => {
+    updateVideoScrollButtons();
+    const el = videoScrollRef.current;
+    window.addEventListener('resize', updateVideoScrollButtons);
+    el?.addEventListener('scroll', updateVideoScrollButtons, { passive: true });
+    return () => {
+      window.removeEventListener('resize', updateVideoScrollButtons);
+      el?.removeEventListener('scroll', updateVideoScrollButtons);
+    };
+  }, []);
+
   const [reviewForm, setReviewForm] = useState({ name: '', address: '', email: '', rating: 5, review: '', flavour: 'Dark Chocolate' });
   const [reviewErrors, setReviewErrors] = useState<string[]>([]);
 
@@ -254,8 +284,38 @@ export default function SocialProof() {
             </p>
           </div>
 
-          {/* Responsive 3 Video Cards Grid (No Carousel) */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 lg:gap-8 max-w-6xl mx-auto px-4">
+          {/* Responsive Video Carousel */}
+          <div className="relative max-w-6xl mx-auto px-4">
+            {/* Left Nav Button */}
+            <button
+              type="button"
+              onClick={() => scrollVideos(-1)}
+              aria-label="আগের ভিডিও দেখুন"
+              className={`absolute left-0 top-1/2 -translate-y-1/2 z-20 w-9 h-9 sm:w-11 sm:h-11 rounded-full bg-white text-brand-magenta shadow-lg border border-brand-peach/30 flex items-center justify-center hover:bg-brand-magenta hover:text-white active:scale-95 transition-all duration-300 ${
+                canScrollVideosLeft ? 'opacity-100' : 'opacity-0 pointer-events-none'
+              }`}
+            >
+              <ChevronLeft size={18} className="sm:hidden" />
+              <ChevronLeft size={22} className="hidden sm:block" />
+            </button>
+
+            {/* Right Nav Button */}
+            <button
+              type="button"
+              onClick={() => scrollVideos(1)}
+              aria-label="পরবর্তী ভিডিও দেখুন"
+              className={`absolute right-0 top-1/2 -translate-y-1/2 z-20 w-9 h-9 sm:w-11 sm:h-11 rounded-full bg-white text-brand-magenta shadow-lg border border-brand-peach/30 flex items-center justify-center hover:bg-brand-magenta hover:text-white active:scale-95 transition-all duration-300 ${
+                canScrollVideosRight ? 'opacity-100' : 'opacity-0 pointer-events-none'
+              }`}
+            >
+              <ChevronRight size={18} className="sm:hidden" />
+              <ChevronRight size={22} className="hidden sm:block" />
+            </button>
+
+            <div
+              ref={videoScrollRef}
+              className="flex gap-4 sm:gap-6 overflow-x-auto no-scrollbar overscroll-x-contain scroll-smooth snap-x snap-mandatory pb-2"
+            >
             {videoItems.map((video, idx) => {
               const ytInfo = parseYouTubeUrl(video.videoUrl);
               const hasCustomThumb = video.thumbnail && !video.thumbnail.startsWith('PASTE');
@@ -277,10 +337,11 @@ export default function SocialProof() {
               return (
                 <motion.div
                   key={video.id || idx}
+                  data-carousel-item
                   whileHover={{ y: -6 }}
                   transition={{ duration: 0.2 }}
                   onClick={() => setActiveVideoIndex(idx)}
-                  className="bg-white/80 backdrop-blur-md rounded-3xl p-3 sm:p-4 shadow-[0_10px_30px_-10px_rgba(0,0,0,0.08)] border border-white cursor-pointer group hover:shadow-[0_20px_40px_-15px_rgba(189,0,82,0.18)] transition-all duration-300 flex flex-col h-full relative"
+                  className="shrink-0 w-[78%] sm:w-[calc(50%-12px)] md:w-[calc(33.333%-16px)] snap-start bg-white/80 backdrop-blur-md rounded-3xl p-3 sm:p-4 shadow-[0_10px_30px_-10px_rgba(0,0,0,0.08)] border border-white cursor-pointer group hover:shadow-[0_20px_40px_-15px_rgba(189,0,82,0.18)] transition-all duration-300 flex flex-col h-full relative"
                 >
                   <div className="relative w-full aspect-[3/4] rounded-2xl overflow-hidden bg-gray-900 shadow-inner flex items-center justify-center">
                     {thumbUrl ? (
@@ -325,6 +386,7 @@ export default function SocialProof() {
                 </motion.div>
               );
             })}
+            </div>
           </div>
         </div>
       </div>
